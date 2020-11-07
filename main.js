@@ -13,6 +13,21 @@ const INITIAL_FACES = [
         [100, 0, 0],
         [0, 0, 0],
     ],
+    { transition: true, point: [0, 100, 100] },
+    [
+        [0, 100, 100],
+        [0, 0, 100],
+        [100, 0, 100],
+        [100, 100, 100],
+        [0, 100, 100],
+    ],
+    [
+        [0, 100, 100],
+        [0, 100, 0],
+        [100, 100, 0],
+        [100, 100, 100],
+        [0, 100, 100],
+    ],
 ];
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -24,31 +39,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('input').addEventListener('input', (e) => {
         const degrees = e.target.value;
-        const radians = degreesToRadians(degrees);
         const faces = [];
 
         for (let face of INITIAL_FACES) {
-            const points = [];
+            if (face.transition) {
+                const newPoint = matrixRotationX(face.point, degrees);
 
-            for (let point of face) {
-                const realX = point[0] - 50;
-                const realY = point[1] - 50;
-                const realZ = point[2] - 50;
+                faces.push({ transition: true, point: newPoint });
+            } else {
+                const points = [];
 
-                const x = realX * 1 + realY * 0 + realZ * 0;
-                const y =
-                    realX * 0 +
-                    realY * Math.cos(radians) +
-                    realZ * -Math.sin(radians);
-                const z =
-                    realX * 0 +
-                    realY * Math.sin(radians) +
-                    realZ * Math.cos(radians);
+                for (let point of face) {
+                    const newPoint = matrixRotationX(point, degrees);
 
-                points.push([x + 50, y + 50, z + 50]);
+                    points.push(newPoint);
+                }
+
+                faces.push(points);
             }
-
-            faces.push(points);
         }
 
         draw(canvas, faces);
@@ -56,17 +64,20 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function draw(canvas, faces) {
-    const colors = ['blue', 'red'];
+    const colors = ['blue', 'red', 'transparent', 'green', 'yellow'];
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (let i = 0; i < faces.length; i++) {
-        console.log(colors[i]);
         ctx.beginPath();
         ctx.strokeStyle = colors[i];
 
-        for (let point of faces[i]) {
-            ctx.lineTo(point[0], point[1]);
+        if (faces[i].transition) {
+            ctx.lineTo(faces[i].point[0], faces[i].point[1]);
+        } else {
+            for (let point of faces[i]) {
+                ctx.lineTo(point[0], point[1]);
+            }
         }
 
         ctx.stroke();
@@ -75,4 +86,18 @@ function draw(canvas, faces) {
 
 function degreesToRadians(degrees) {
     return (degrees * Math.PI) / 180;
+}
+
+function matrixRotationX(point, degrees) {
+    const radians = degreesToRadians(degrees);
+    const realX = point[0] - 50;
+    const realY = point[1] - 50;
+    const realZ = point[2] - 50;
+
+    const x = realX * 1 + realY * 0 + realZ * 0;
+    const y =
+        realX * 0 + realY * Math.cos(radians) + realZ * -Math.sin(radians);
+    const z = realX * 0 + realY * Math.sin(radians) + realZ * Math.cos(radians);
+
+    return [x + 50, y + 50, z + 50];
 }
