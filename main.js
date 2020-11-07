@@ -12,8 +12,8 @@ const INITIAL_FACES = [
         [100, 0, 100],
         [100, 0, 0],
         [0, 0, 0],
+        { transition: true, point: [0, 100, 100] },
     ],
-    { transition: true, point: [0, 100, 100] },
     [
         [0, 100, 100],
         [0, 0, 100],
@@ -42,21 +42,24 @@ window.addEventListener('DOMContentLoaded', () => {
         const faces = [];
 
         for (let face of INITIAL_FACES) {
-            if (face.transition) {
-                const newPoint = matrixRotationX(face.point, degrees);
+            const points = [];
 
-                faces.push({ transition: true, point: newPoint });
-            } else {
-                const points = [];
+            for (let point of face) {
+                if (point.transition) {
+                    const newPoint = matrixRotationX(point.point, degrees);
 
-                for (let point of face) {
+                    points.push({
+                        transition: true,
+                        point: newPoint,
+                    });
+                } else {
                     const newPoint = matrixRotationX(point, degrees);
 
                     points.push(newPoint);
                 }
-
-                faces.push(points);
             }
+
+            faces.push(points);
         }
 
         draw(canvas, faces);
@@ -68,19 +71,40 @@ function draw(canvas, faces) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // faces = faces.sort((a, b) => {
+    //     let sumZA = 0;
+    //     let sumZB = 0;
+
+    //     for (let point of a) {
+    //         if (!point.transition) {
+    //             sumZA += point.reduce((acc, value) => acc + value[2], 0);
+    //         }
+    //     }
+
+    //     for (let point of b) {
+    //         if (!point.transition) {
+    //             sumZB += point.reduce((acc, value) => acc + value[2], 0);
+    //         }
+    //     }
+
+    //     return sumZA > sumZB ? 1 : -1;
+    // });
+
     for (let i = 0; i < faces.length; i++) {
         ctx.beginPath();
+        // ctx.fillStyle = colors[i];
         ctx.strokeStyle = colors[i];
 
-        if (faces[i].transition) {
-            ctx.lineTo(faces[i].point[0], faces[i].point[1]);
-        } else {
-            for (let point of faces[i]) {
+        for (let point of faces[i]) {
+            if (point.transition) {
+                ctx.moveTo(point.point[0], point.point[1]);
+            } else {
                 ctx.lineTo(point[0], point[1]);
             }
         }
 
         ctx.stroke();
+        // ctx.fill();
     }
 }
 
