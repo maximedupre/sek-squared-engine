@@ -1,12 +1,11 @@
-const POINTS = [
-    [0, 0],
-    [0, 100],
-    [100, 100],
-    [100, 0],
-    [0, 0],
-];
-
 window.addEventListener('DOMContentLoaded', () => {
+    const points = [
+        [0, 0],
+        [0, 100],
+        [100, 100],
+        [100, 0],
+        [0, 0],
+    ];
     const canvas = document.querySelector('canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
