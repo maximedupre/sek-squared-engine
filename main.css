@@ -2,3 +2,7 @@ html,
 body {
     overflow: hidden;
 }
+
+input {
+    width: 1500px;
+}

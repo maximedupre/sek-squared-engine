@@ -1,35 +1,42 @@
+const INITIAL_POINTS = [
+    [0, 0, 0],
+    [0, 100, 0],
+    [100, 100, 0],
+    [100, 0, 0],
+    [0, 0, 0],
+];
+
 window.addEventListener('DOMContentLoaded', () => {
-    const points = [
-        [0, 0],
-        [0, 100],
-        [100, 100],
-        [100, 0],
-        [0, 0],
-    ];
     const canvas = document.querySelector('canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    draw(canvas, POINTS);
+    draw(canvas, INITIAL_POINTS);
 
     document.querySelector('input').addEventListener('input', (e) => {
-        const tetha = e.target.value;
-        const newPoints = [];
+        const degrees = e.target.value;
+        const radians = degreesToRadians(degrees);
+        const points = [];
 
-        for (let point of POINTS) {
-            const x = point[0];
-            let y;
+        for (let point of INITIAL_POINTS) {
+            const realX = point[0] - 50;
+            const realY = point[1] - 50;
+            const realZ = point[2];
 
-            if (point[1] > 50) {
-                y = (-5 / 9) * tetha + point[1];
-            } else {
-                y = (5 / 9) * tetha + point[1];
-            }
+            const x = realX * 1 + realY * 0 + realZ * 0;
+            const y =
+                realX * 0 +
+                realY * Math.cos(radians) +
+                realZ * -Math.sin(radians);
+            const z =
+                realX * 0 +
+                realY * Math.sin(radians) +
+                realZ * Math.cos(radians);
 
-            newPoints.push([x, y]);
+            points.push([x + 50, y + 50, z]);
         }
 
-        draw(canvas, newPoints);
+        draw(canvas, points);
     });
 });
 
@@ -43,4 +50,8 @@ function draw(canvas, points) {
     }
 
     ctx.stroke();
+}
+
+function degreesToRadians(degrees) {
+    return (degrees * Math.PI) / 180;
 }
