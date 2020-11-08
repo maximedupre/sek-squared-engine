@@ -139,6 +139,38 @@ window.addEventListener('DOMContentLoaded', () => {
 
         draw(canvas, faces);
     });
+
+    document.querySelector('#slider-z').addEventListener('input', (e) => {
+        const degrees = e.target.value;
+        const faces = [];
+
+        for (let face of INITIAL_FACES) {
+            const points = [];
+
+            for (let point of face.points) {
+                if (point.transition) {
+                    const newPoint = matrixRotationZ(point.point, degrees);
+
+                    points.push({
+                        transition: true,
+                        point: newPoint,
+                    });
+                } else {
+                    const newPoint = matrixRotationZ(point, degrees);
+
+                    points.push(newPoint);
+                }
+            }
+
+            faces.push({
+                name: face.name,
+                color: face.color,
+                points,
+            });
+        }
+
+        draw(canvas, faces);
+    });
 });
 
 function draw(canvas, faces) {
@@ -209,6 +241,20 @@ function matrixRotationY(point, degrees) {
     const y = realX * 0 + realY * 1 + realZ * 0;
     const z =
         realX * -Math.sin(radians) + realY * 0 + realZ * Math.cos(radians);
+
+    return [x + 50, y + 50, z + 50];
+}
+
+function matrixRotationZ(point, degrees) {
+    const radians = degreesToRadians(degrees);
+    const realX = point[0] - 50;
+    const realY = point[1] - 50;
+    const realZ = point[2] - 50;
+
+    const x =
+        realX * Math.cos(radians) + realY * -Math.sin(radians) + realZ * 0;
+    const y = realX * Math.sin(radians) + realY * Math.cos(radians) + realZ * 0;
+    const z = realX * 0 + realY * 0 + realZ * 1;
 
     return [x + 50, y + 50, z + 50];
 }
