@@ -1,33 +1,49 @@
 const INITIAL_FACES = [
-    [
-        [0, 0, 0],
-        [0, 100, 0],
-        [100, 100, 0],
-        [100, 0, 0],
-        [0, 0, 0],
-    ],
-    [
-        [0, 0, 0],
-        [0, 0, 100],
-        [100, 0, 100],
-        [100, 0, 0],
-        [0, 0, 0],
-        { transition: true, point: [0, 100, 100] },
-    ],
-    [
-        [0, 100, 100],
-        [0, 0, 100],
-        [100, 0, 100],
-        [100, 100, 100],
-        [0, 100, 100],
-    ],
-    [
-        [0, 100, 100],
-        [0, 100, 0],
-        [100, 100, 0],
-        [100, 100, 100],
-        [0, 100, 100],
-    ],
+    {
+        name: 'front',
+        color: 'yellow',
+        points: [
+            [0, 0, 0],
+            [0, 100, 0],
+            [100, 100, 0],
+            [100, 0, 0],
+            [0, 0, 0],
+        ],
+    },
+    {
+        name: 'top',
+        color: 'blue',
+        points: [
+            [0, 0, 0],
+            [0, 0, 100],
+            [100, 0, 100],
+            [100, 0, 0],
+            [0, 0, 0],
+            { transition: true, point: [0, 100, 100] },
+        ],
+    },
+    {
+        name: 'back',
+        color: 'green',
+        points: [
+            [0, 100, 100],
+            [0, 0, 100],
+            [100, 0, 100],
+            [100, 100, 100],
+            [0, 100, 100],
+        ],
+    },
+    {
+        name: 'bottom',
+        color: 'pink',
+        points: [
+            [0, 100, 100],
+            [0, 100, 0],
+            [100, 100, 0],
+            [100, 100, 100],
+            [0, 100, 100],
+        ],
+    },
 ];
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -44,7 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
         for (let face of INITIAL_FACES) {
             const points = [];
 
-            for (let point of face) {
+            for (let point of face.points) {
                 if (point.transition) {
                     const newPoint = matrixRotationX(point.point, degrees);
 
@@ -59,7 +75,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            faces.push(points);
+            faces.push({
+                name: face.name,
+                color: face.color,
+                points,
+            });
         }
 
         draw(canvas, faces);
@@ -67,35 +87,34 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function draw(canvas, faces) {
-    const colors = ['blue', 'red', 'transparent', 'green', 'yellow'];
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // faces = faces.sort((a, b) => {
-    //     let sumZA = 0;
-    //     let sumZB = 0;
+    faces.sort((a, b) => {
+        const sumZA = a.points.reduce((acc, value, i) => {
+            if (i < 4) {
+                return acc + (value.transition ? 0 : value[2]);
+            } else {
+                return acc;
+            }
+        }, 0);
 
-    //     for (let point of a) {
-    //         if (!point.transition) {
-    //             sumZA += point.reduce((acc, value) => acc + value[2], 0);
-    //         }
-    //     }
+        const sumZB = b.points.reduce((acc, value, i) => {
+            if (i < 4) {
+                return acc + (value.transition ? 0 : value[2]);
+            } else {
+                return acc;
+            }
+        }, 0);
 
-    //     for (let point of b) {
-    //         if (!point.transition) {
-    //             sumZB += point.reduce((acc, value) => acc + value[2], 0);
-    //         }
-    //     }
-
-    //     return sumZA > sumZB ? 1 : -1;
-    // });
+        return sumZA < sumZB ? 1 : -1;
+    });
 
     for (let i = 0; i < faces.length; i++) {
         ctx.beginPath();
-        // ctx.fillStyle = colors[i];
-        ctx.strokeStyle = colors[i];
+        ctx.fillStyle = faces[i].color;
 
-        for (let point of faces[i]) {
+        for (let point of faces[i].points) {
             if (point.transition) {
                 ctx.moveTo(point.point[0], point.point[1]);
             } else {
@@ -103,8 +122,7 @@ function draw(canvas, faces) {
             }
         }
 
-        ctx.stroke();
-        // ctx.fill();
+        ctx.fill();
     }
 }
 
