@@ -53,7 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     draw(canvas, INITIAL_FACES);
 
-    document.querySelector('input').addEventListener('input', (e) => {
+    document.querySelector('#slider-x').addEventListener('input', (e) => {
         const degrees = e.target.value;
         const faces = [];
 
