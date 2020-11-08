@@ -44,6 +44,29 @@ const INITIAL_FACES = [
             [0, 100, 100],
         ],
     },
+    {
+        name: 'left-side',
+        color: 'orange',
+        points: [
+            [0, 100, 100],
+            [0, 100, 0],
+            [0, 0, 0],
+            [0, 0, 100],
+            [0, 100, 100],
+            { transition: true, point: [100, 100, 100] },
+        ],
+    },
+    {
+        name: 'right-side',
+        color: 'black',
+        points: [
+            [100, 100, 100],
+            [100, 100, 0],
+            [100, 0, 0],
+            [100, 0, 100],
+            [100, 100, 100],
+        ],
+    },
 ];
 
 window.addEventListener('DOMContentLoaded', () => {
