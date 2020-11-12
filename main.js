@@ -19,7 +19,6 @@ const INITIAL_FACES = [
             [100, 0, 100],
             [100, 0, 0],
             [0, 0, 0],
-            { transition: true, point: [0, 100, 100] },
         ],
     },
     {
@@ -53,7 +52,6 @@ const INITIAL_FACES = [
             [0, 0, 0],
             [0, 0, 100],
             [0, 100, 100],
-            { transition: true, point: [100, 100, 100] },
         ],
     },
     {
@@ -112,15 +110,16 @@ function draw(canvas, faces) {
     });
 
     for (let i = 0; i < faces.length; i++) {
+        const points = faces[i].points;
+
         ctx.beginPath();
+
         ctx.fillStyle = faces[i].color;
 
-        for (let point of faces[i].points) {
-            if (point.transition) {
-                ctx.moveTo(point.point[0], point.point[1]);
-            } else {
-                ctx.lineTo(point[0], point[1]);
-            }
+        ctx.moveTo(points[0][0], points[0][1]);
+
+        for (let point of points) {
+            ctx.lineTo(point[0], point[1]);
         }
 
         ctx.fill();
@@ -135,34 +134,17 @@ function onSlider(e, axis, canvas) {
         const points = [];
 
         for (let point of face.points) {
-            if (point.transition) {
-                let newPoint;
+            let newPoint;
 
-                if (axis === 'x') {
-                    newPoint = matrixRotationX(point.point, degrees);
-                } else if (axis === 'y') {
-                    newPoint = matrixRotationY(point.point, degrees);
-                } else {
-                    newPoint = matrixRotationZ(point.point, degrees);
-                }
-
-                points.push({
-                    transition: true,
-                    point: newPoint,
-                });
+            if (axis === 'x') {
+                newPoint = matrixRotationX(point, degrees);
+            } else if (axis === 'y') {
+                newPoint = matrixRotationY(point, degrees);
             } else {
-                let newPoint;
-
-                if (axis === 'x') {
-                    newPoint = matrixRotationX(point, degrees);
-                } else if (axis === 'y') {
-                    newPoint = matrixRotationY(point, degrees);
-                } else {
-                    newPoint = matrixRotationZ(point, degrees);
-                }
-
-                points.push(newPoint);
+                newPoint = matrixRotationZ(point, degrees);
             }
+
+            points.push(newPoint);
         }
 
         faces.push({
