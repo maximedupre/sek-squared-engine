@@ -76,101 +76,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
     draw(canvas, INITIAL_FACES);
 
-    document.querySelector('#slider-x').addEventListener('input', (e) => {
-        const degrees = e.target.value;
-        const faces = [];
-
-        for (let face of INITIAL_FACES) {
-            const points = [];
-
-            for (let point of face.points) {
-                if (point.transition) {
-                    const newPoint = matrixRotationX(point.point, degrees);
-
-                    points.push({
-                        transition: true,
-                        point: newPoint,
-                    });
-                } else {
-                    const newPoint = matrixRotationX(point, degrees);
-
-                    points.push(newPoint);
-                }
-            }
-
-            faces.push({
-                name: face.name,
-                color: face.color,
-                points,
-            });
-        }
-
-        draw(canvas, faces);
-    });
-
-    document.querySelector('#slider-y').addEventListener('input', (e) => {
-        const degrees = e.target.value;
-        const faces = [];
-
-        for (let face of INITIAL_FACES) {
-            const points = [];
-
-            for (let point of face.points) {
-                if (point.transition) {
-                    const newPoint = matrixRotationY(point.point, degrees);
-
-                    points.push({
-                        transition: true,
-                        point: newPoint,
-                    });
-                } else {
-                    const newPoint = matrixRotationY(point, degrees);
-
-                    points.push(newPoint);
-                }
-            }
-
-            faces.push({
-                name: face.name,
-                color: face.color,
-                points,
-            });
-        }
-
-        draw(canvas, faces);
-    });
-
-    document.querySelector('#slider-z').addEventListener('input', (e) => {
-        const degrees = e.target.value;
-        const faces = [];
-
-        for (let face of INITIAL_FACES) {
-            const points = [];
-
-            for (let point of face.points) {
-                if (point.transition) {
-                    const newPoint = matrixRotationZ(point.point, degrees);
-
-                    points.push({
-                        transition: true,
-                        point: newPoint,
-                    });
-                } else {
-                    const newPoint = matrixRotationZ(point, degrees);
-
-                    points.push(newPoint);
-                }
-            }
-
-            faces.push({
-                name: face.name,
-                color: face.color,
-                points,
-            });
-        }
-
-        draw(canvas, faces);
-    });
+    document
+        .querySelector('#slider-x')
+        .addEventListener('input', (e) => onSlider(e, 'x', canvas));
+    document
+        .querySelector('#slider-y')
+        .addEventListener('input', (e) => onSlider(e, 'y', canvas));
+    document
+        .querySelector('#slider-z')
+        .addEventListener('input', (e) => onSlider(e, 'z', canvas));
 });
 
 function draw(canvas, faces) {
@@ -211,6 +125,54 @@ function draw(canvas, faces) {
 
         ctx.fill();
     }
+}
+
+function onSlider(e, axis, canvas) {
+    const degrees = e.target.value;
+    const faces = [];
+
+    for (let face of INITIAL_FACES) {
+        const points = [];
+
+        for (let point of face.points) {
+            if (point.transition) {
+                let newPoint;
+
+                if (axis === 'x') {
+                    newPoint = matrixRotationX(point.point, degrees);
+                } else if (axis === 'y') {
+                    newPoint = matrixRotationY(point.point, degrees);
+                } else {
+                    newPoint = matrixRotationZ(point.point, degrees);
+                }
+
+                points.push({
+                    transition: true,
+                    point: newPoint,
+                });
+            } else {
+                let newPoint;
+
+                if (axis === 'x') {
+                    newPoint = matrixRotationX(point, degrees);
+                } else if (axis === 'y') {
+                    newPoint = matrixRotationY(point, degrees);
+                } else {
+                    newPoint = matrixRotationZ(point, degrees);
+                }
+
+                points.push(newPoint);
+            }
+        }
+
+        faces.push({
+            name: face.name,
+            color: face.color,
+            points,
+        });
+    }
+
+    draw(canvas, faces);
 }
 
 function degreesToRadians(degrees) {
