@@ -109,21 +109,9 @@ function draw(canvas, faces) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     faces.sort((a, b) => {
-        const sumZA = a.points.reduce((acc, value, i) => {
-            if (i < 4) {
-                return acc + (value.transition ? 0 : value[2]);
-            } else {
-                return acc;
-            }
-        }, 0);
+        const sumZA = a.points.reduce((acc, value) => acc + value[2], 0);
 
-        const sumZB = b.points.reduce((acc, value, i) => {
-            if (i < 4) {
-                return acc + (value.transition ? 0 : value[2]);
-            } else {
-                return acc;
-            }
-        }, 0);
+        const sumZB = b.points.reduce((acc, value) => acc + value[2], 0);
 
         return sumZA < sumZB ? 1 : -1;
     });
