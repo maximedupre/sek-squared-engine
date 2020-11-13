@@ -195,7 +195,7 @@ function matrixRotationX(point, degrees) {
         realX * 0 + realY * Math.cos(radians) + realZ * -Math.sin(radians);
     const z = realX * 0 + realY * Math.sin(radians) + realZ * Math.cos(radians);
 
-    return [x + 50, y + 50, z + 50];
+    return [x + originX, y + originY, z + originZ];
 }
 
 function matrixRotationY(point, degrees) {
@@ -210,7 +210,7 @@ function matrixRotationY(point, degrees) {
     const z =
         realX * -Math.sin(radians) + realY * 0 + realZ * Math.cos(radians);
 
-    return [x + 50, y + 50, z + 50];
+    return [x + originX, y + originY, z + originZ];
 }
 
 function matrixRotationZ(point, degrees) {
@@ -225,5 +225,5 @@ function matrixRotationZ(point, degrees) {
     const y = realX * Math.sin(radians) + realY * Math.cos(radians) + realZ * 0;
     const z = realX * 0 + realY * 0 + realZ * 1;
 
-    return [x + 50, y + 50, z + 50];
+    return [x + originX, y + originY, z + originZ];
 }
