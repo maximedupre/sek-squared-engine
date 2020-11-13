@@ -86,20 +86,22 @@ window.addEventListener('DOMContentLoaded', () => {
     document
         .querySelector('#origin')
         .addEventListener('change', (e) =>
-            onOriginChange(e.target.value, canvas),
+            origin2dTranslation(e.target.value, canvas),
         );
 });
 
-function onOriginChange(newOrigin, canvas) {
+function origin2dTranslation(newOrigin, canvas) {
+    newOrigin = +newOrigin;
+
     for (let face of INITIAL_FACES) {
         for (let point of face.points) {
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 2; i++) {
                 point[i] += newOrigin - INITIAL_ORIGIN[i];
             }
         }
     }
 
-    INITIAL_ORIGIN = [newOrigin, newOrigin, newOrigin];
+    INITIAL_ORIGIN = [newOrigin, newOrigin, INITIAL_ORIGIN[2]];
 
     draw(canvas, INITIAL_FACES);
 }
