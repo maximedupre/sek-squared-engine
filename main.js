@@ -94,7 +94,7 @@ function onOriginChange(newOrigin, canvas) {
     for (let face of INITIAL_FACES) {
         for (let point of face.points) {
             for (let i = 0; i < 3; i++) {
-                point[i] += newOrigin - INITIAL_ORIGIN[0];
+                point[i] += newOrigin - INITIAL_ORIGIN[i];
             }
         }
     }
