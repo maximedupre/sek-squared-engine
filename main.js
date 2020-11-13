@@ -1,4 +1,4 @@
-const INITIAL_FACES = [
+let INITIAL_FACES = [
     {
         name: 'front',
         color: 'yellow',
@@ -60,6 +60,11 @@ const INITIAL_FACES = [
         ],
     },
 ];
+const tethas = {
+    x: 0,
+    y: 0,
+    z: 0,
+};
 
 window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
@@ -121,8 +126,9 @@ function draw(canvas, faces) {
 }
 
 function onSlider(e, axis, canvas) {
-    const degrees = e.target.value;
     const faces = [];
+    tethaDelta = tethas[axis] - e.target.value;
+    tethas[axis] = e.target.value;
 
     for (let face of INITIAL_FACES) {
         const points = [];
@@ -131,11 +137,11 @@ function onSlider(e, axis, canvas) {
             let newPoint;
 
             if (axis === 'x') {
-                newPoint = matrixRotationX(point, degrees);
+                newPoint = matrixRotationX(point, tethaDelta);
             } else if (axis === 'y') {
-                newPoint = matrixRotationY(point, degrees);
+                newPoint = matrixRotationY(point, tethaDelta);
             } else {
-                newPoint = matrixRotationZ(point, degrees);
+                newPoint = matrixRotationZ(point, tethaDelta);
             }
 
             points.push(newPoint);
@@ -146,6 +152,8 @@ function onSlider(e, axis, canvas) {
             color: face.color,
             points,
         });
+
+        INITIAL_FACES = faces;
     }
 
     draw(canvas, faces);
