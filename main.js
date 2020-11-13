@@ -1,5 +1,4 @@
-const origin = [50, 50, 50];
-
+let INITIAL_ORIGIN = [50, 50, 50];
 let INITIAL_FACES = [
     {
         name: 'front',
@@ -84,7 +83,26 @@ window.addEventListener('DOMContentLoaded', () => {
     document
         .querySelector('#slider-z')
         .addEventListener('input', (e) => onSlider(e, 'z', canvas));
+    document
+        .querySelector('#origin')
+        .addEventListener('change', (e) =>
+            onOriginChange(e.target.value, canvas),
+        );
 });
+
+function onOriginChange(newOrigin, canvas) {
+    for (let face of INITIAL_FACES) {
+        for (let point of face.points) {
+            for (let i = 0; i < 3; i++) {
+                point[i] += newOrigin - INITIAL_ORIGIN[0];
+            }
+        }
+    }
+
+    INITIAL_ORIGIN = [newOrigin, newOrigin, newOrigin];
+
+    draw(canvas, INITIAL_FACES);
+}
 
 function draw(canvas, faces) {
     const ctx = canvas.getContext('2d');
@@ -167,7 +185,7 @@ function degreesToRadians(degrees) {
 
 function matrixRotationX(point, degrees) {
     const radians = degreesToRadians(degrees);
-    const [originX, originY, originZ] = origin;
+    const [originX, originY, originZ] = INITIAL_ORIGIN;
     const realX = point[0] - originX;
     const realY = point[1] - originY;
     const realZ = point[2] - originZ;
@@ -182,7 +200,7 @@ function matrixRotationX(point, degrees) {
 
 function matrixRotationY(point, degrees) {
     const radians = degreesToRadians(degrees);
-    const [originX, originY, originZ] = origin;
+    const [originX, originY, originZ] = INITIAL_ORIGIN;
     const realX = point[0] - originX;
     const realY = point[1] - originY;
     const realZ = point[2] - originZ;
@@ -197,7 +215,7 @@ function matrixRotationY(point, degrees) {
 
 function matrixRotationZ(point, degrees) {
     const radians = degreesToRadians(degrees);
-    const [originX, originY, originZ] = origin;
+    const [originX, originY, originZ] = INITIAL_ORIGIN;
     const realX = point[0] - originX;
     const realY = point[1] - originY;
     const realZ = point[2] - originZ;
