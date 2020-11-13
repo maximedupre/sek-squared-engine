@@ -124,6 +124,7 @@ function draw(canvas, faces) {
         ctx.beginPath();
 
         ctx.fillStyle = faces[i].color;
+        ctx.globalAlpha = 0.8;
 
         ctx.moveTo(points[0][0], points[0][1]);
 
