@@ -1,3 +1,5 @@
+const origin = [50, 50, 50];
+
 let INITIAL_FACES = [
     {
         name: 'front',
@@ -165,9 +167,10 @@ function degreesToRadians(degrees) {
 
 function matrixRotationX(point, degrees) {
     const radians = degreesToRadians(degrees);
-    const realX = point[0] - 50;
-    const realY = point[1] - 50;
-    const realZ = point[2] - 50;
+    const [originX, originY, originZ] = origin;
+    const realX = point[0] - originX;
+    const realY = point[1] - originY;
+    const realZ = point[2] - originZ;
 
     const x = realX * 1 + realY * 0 + realZ * 0;
     const y =
@@ -179,9 +182,10 @@ function matrixRotationX(point, degrees) {
 
 function matrixRotationY(point, degrees) {
     const radians = degreesToRadians(degrees);
-    const realX = point[0] - 50;
-    const realY = point[1] - 50;
-    const realZ = point[2] - 50;
+    const [originX, originY, originZ] = origin;
+    const realX = point[0] - originX;
+    const realY = point[1] - originY;
+    const realZ = point[2] - originZ;
 
     const x = realX * Math.cos(radians) + realY * 0 + realZ * Math.sin(radians);
     const y = realX * 0 + realY * 1 + realZ * 0;
@@ -193,9 +197,10 @@ function matrixRotationY(point, degrees) {
 
 function matrixRotationZ(point, degrees) {
     const radians = degreesToRadians(degrees);
-    const realX = point[0] - 50;
-    const realY = point[1] - 50;
-    const realZ = point[2] - 50;
+    const [originX, originY, originZ] = origin;
+    const realX = point[0] - originX;
+    const realY = point[1] - originY;
+    const realZ = point[2] - originZ;
 
     const x =
         realX * Math.cos(radians) + realY * -Math.sin(radians) + realZ * 0;
