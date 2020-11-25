@@ -73,6 +73,8 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     origin2dTranslation([canvas.width / 2, canvas.height / 2, 50], canvas);
+    onSlider(-10, 'x', canvas);
+    onSlider(-10, 'y', canvas);
 });
 
 function origin2dTranslation(newOrigin, canvas) {
@@ -107,7 +109,7 @@ function draw(canvas, faces) {
         ctx.beginPath();
 
         ctx.fillStyle = faces[i].color;
-        ctx.globalAlpha = 0.8;
+        ctx.globalAlpha = 0.925;
 
         ctx.moveTo(points[0][0], points[0][1]);
 
@@ -119,10 +121,10 @@ function draw(canvas, faces) {
     }
 }
 
-function onSlider(e, axis, canvas) {
+function onSlider(value, axis, canvas) {
     const faces = [];
-    tethaDelta = tethas[axis] - e.target.value;
-    tethas[axis] = e.target.value;
+    tethaDelta = tethas[axis] - value;
+    tethas[axis] = value;
 
     for (let face of INITIAL_FACES) {
         const points = [];
