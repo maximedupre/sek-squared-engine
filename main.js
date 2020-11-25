@@ -75,6 +75,15 @@ window.addEventListener('DOMContentLoaded', () => {
     origin2dTranslation([canvas.width / 2, canvas.height / 2, 50], canvas);
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
+
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            origin2dTranslation(
+                [INITIAL_ORIGIN[0], INITIAL_ORIGIN[1] - 100, INITIAL_ORIGIN[3]],
+                canvas,
+            );
+        }
+    });
 });
 
 function origin2dTranslation(newOrigin, canvas) {
