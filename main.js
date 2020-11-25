@@ -73,21 +73,6 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     draw(canvas, INITIAL_FACES);
-
-    document
-        .querySelector('#slider-x')
-        .addEventListener('input', (e) => onSlider(e, 'x', canvas));
-    document
-        .querySelector('#slider-y')
-        .addEventListener('input', (e) => onSlider(e, 'y', canvas));
-    document
-        .querySelector('#slider-z')
-        .addEventListener('input', (e) => onSlider(e, 'z', canvas));
-    document
-        .querySelector('#origin')
-        .addEventListener('change', (e) =>
-            origin2dTranslation(e.target.value, canvas),
-        );
 });
 
 function origin2dTranslation(newOrigin, canvas) {
