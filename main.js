@@ -79,18 +79,18 @@ window.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
             let v = 0;
+            let a = 0.5;
             let t0 = 0;
             let t = t0;
             const timeIncrease = 1000;
-            const acceleration = 1;
 
             setInterval(() => {
-                v = v + (t - t0) * acceleration;
+                v = v + (t - t0) * a;
                 const timeTetha = t - t0;
                 const y =
                     INITIAL_ORIGIN[1] +
                     v * timeTetha +
-                    0.5 * acceleration * (timeTetha ^ 2);
+                    0.5 * a * (timeTetha ^ 2);
 
                 origin2dTranslation(
                     [INITIAL_ORIGIN[0], y, [INITIAL_ORIGIN[2]]],
@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 );
 
                 t += timeIncrease / 1000;
-            }, 100);
+            }, timeIncrease);
         }
     });
 });
