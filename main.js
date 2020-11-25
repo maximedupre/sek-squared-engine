@@ -72,21 +72,19 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    draw(canvas, INITIAL_FACES);
+    origin2dTranslation([canvas.width / 2, canvas.height / 2, 50], canvas);
 });
 
 function origin2dTranslation(newOrigin, canvas) {
-    newOrigin = +newOrigin;
-
     for (let face of INITIAL_FACES) {
         for (let point of face.points) {
             for (let i = 0; i < 2; i++) {
-                point[i] += newOrigin - INITIAL_ORIGIN[i];
+                point[i] += newOrigin[i] - INITIAL_ORIGIN[i];
             }
         }
     }
 
-    INITIAL_ORIGIN = [newOrigin, newOrigin, INITIAL_ORIGIN[2]];
+    INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], INITIAL_ORIGIN[2]];
 
     draw(canvas, INITIAL_FACES);
 }
