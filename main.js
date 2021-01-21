@@ -75,6 +75,28 @@ window.addEventListener('DOMContentLoaded', () => {
     origin2dTranslation([canvas.width / 2, canvas.height / 2, 50], canvas);
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
+    // draw(canvas, INITIAL_FACES);
+
+    document
+        .querySelector('#slider-x')
+        .addEventListener('input', (e) =>
+            onSlider(e.target.value, 'x', canvas),
+        );
+    document
+        .querySelector('#slider-y')
+        .addEventListener('input', (e) =>
+            onSlider(e.target.value, 'y', canvas),
+        );
+    document
+        .querySelector('#slider-z')
+        .addEventListener('input', (e) =>
+            onSlider(e.target.value, 'z', canvas),
+        );
+    document
+        .querySelector('#origin')
+        .addEventListener('change', (e) =>
+            origin2dTranslation(e.target.value, canvas),
+        );
 });
 
 function origin2dTranslation(newOrigin, canvas) {
