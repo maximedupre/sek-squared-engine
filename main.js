@@ -92,11 +92,6 @@ window.addEventListener('DOMContentLoaded', () => {
         .addEventListener('input', (e) =>
             onSlider(e.target.value, 'z', canvas),
         );
-    document
-        .querySelector('#origin')
-        .addEventListener('change', (e) =>
-            origin2dTranslation(e.target.value, canvas),
-        );
 });
 
 function origin2dTranslation(newOrigin, canvas) {
