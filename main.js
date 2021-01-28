@@ -76,22 +76,37 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
 
-    const initialSpeed = 0;
-    const tick = 10;
-    var cumulTime = 0;
+    const TICK = 100;
+    let cumulSecs = 0;
+    let isSpacePressed = false;
+    let acceleration = 0.981;
+    let speed = 0;
 
     setInterval(() => {
-        const acceleration = 0.981;
-        const speed = initialSpeed + acceleration;
+        if (!isSpacePressed) {
+            acceleration = Math.min(acceleration + 0.1, 0.981);
+        } else {
+            acceleration = Math.max(acceleration - 0.3, -0.981);
+            isSpacePressed = false;
+        }
+
+        speed += acceleration * cumulSecs;
+
         const y =
             INITIAL_ORIGIN[1] +
             speed +
-            0.5 * acceleration * Math.pow(cumulTime / 1000, 2);
+            0.5 * acceleration * Math.pow(cumulSecs, 2);
 
         origin2dTranslation([INITIAL_ORIGIN[0], y, 50], canvas);
 
-        cumulTime += tick;
-    }, tick);
+        cumulSecs += TICK / 1000;
+    }, TICK);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === ' ') {
+            isSpacePressed = true;
+        }
+    });
 
     document
         .querySelector('#slider-x')
