@@ -77,7 +77,7 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'y', canvas);
 
     const initialSpeed = 0;
-    const tick = 100;
+    const tick = 10;
     var cumulTime = 0;
 
     setInterval(() => {
