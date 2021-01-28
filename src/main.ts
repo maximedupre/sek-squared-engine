@@ -5,6 +5,7 @@ import {
     origin2dTranslation,
 } from './3d.js';
 import { data } from './data.js';
+import { mrua } from './physics.js';
 
 const tethas = {
     x: 0,
@@ -37,10 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         speed += acceleration * cumulSecs;
 
-        const y =
-            data.INITIAL_ORIGIN[1] +
-            speed +
-            0.5 * acceleration * Math.pow(cumulSecs, 2);
+        const y = mrua(data.INITIAL_ORIGIN[1], speed, acceleration, cumulSecs);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
         draw(canvas, data.INITIAL_FACES);
