@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "module": "ESNEXT",
+        "outDir": "public/out",
+        "target": "ES3"
+    },
+    "include": ["**/*.ts"]
+}
