@@ -2,6 +2,18 @@ import { data } from './data.js';
 export function degreesToRadians(degrees) {
     return (degrees * Math.PI) / 180;
 }
+export function origin2dTranslation(newOrigin) {
+    for (var _i = 0, _a = data.INITIAL_FACES; _i < _a.length; _i++) {
+        var face = _a[_i];
+        for (var _b = 0, _c = face.points; _b < _c.length; _b++) {
+            var point = _c[_b];
+            for (var i = 0; i < 2; i++) {
+                point[i] += newOrigin[i] - data.INITIAL_ORIGIN[i];
+            }
+        }
+    }
+    data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
+}
 export function matrixRotationX(point, degrees) {
     var radians = degreesToRadians(degrees);
     var _a = data.INITIAL_ORIGIN, originX = _a[0], originY = _a[1], originZ = _a[2];

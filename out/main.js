@@ -1,5 +1,6 @@
-import { matrixRotationX, matrixRotationY, matrixRotationZ } from './3d.js';
+import { matrixRotationX, matrixRotationY, matrixRotationZ, origin2dTranslation, } from './3d.js';
 import { data } from './data.js';
+import { mrua } from './physics.js';
 var tethas = {
     x: 0,
     y: 0,
@@ -9,8 +10,8 @@ window.addEventListener('DOMContentLoaded', function () {
     var canvas = document.querySelector('canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    console.log('yo...');
-    origin2dTranslation([canvas.width / 2, canvas.height / 2, 50], canvas);
+    origin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
+    draw(canvas, data.INITIAL_FACES);
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
     var TICK = 100;
@@ -27,10 +28,9 @@ window.addEventListener('DOMContentLoaded', function () {
             isSpacePressed = false;
         }
         speed += acceleration * cumulSecs;
-        var y = data.INITIAL_ORIGIN[1] +
-            speed +
-            0.5 * acceleration * Math.pow(cumulSecs, 2);
-        origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50], canvas);
+        var y = mrua(data.INITIAL_ORIGIN[1], speed, acceleration, cumulSecs);
+        origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
+        draw(canvas, data.INITIAL_FACES);
         cumulSecs += TICK / 1000;
     }, TICK);
     document.addEventListener('keydown', function (e) {
@@ -54,19 +54,6 @@ window.addEventListener('DOMContentLoaded', function () {
         return onSlider(e.target.value, 'z', canvas);
     });
 });
-function origin2dTranslation(newOrigin, canvas) {
-    for (var _i = 0, _a = data.INITIAL_FACES; _i < _a.length; _i++) {
-        var face = _a[_i];
-        for (var _b = 0, _c = face.points; _b < _c.length; _b++) {
-            var point = _c[_b];
-            for (var i = 0; i < 2; i++) {
-                point[i] += newOrigin[i] - data.INITIAL_ORIGIN[i];
-            }
-        }
-    }
-    data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
-    draw(canvas, data.INITIAL_FACES);
-}
 function draw(canvas, faces) {
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
