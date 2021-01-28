@@ -75,7 +75,6 @@ window.addEventListener('DOMContentLoaded', () => {
     origin2dTranslation([canvas.width / 2, canvas.height / 2, 50], canvas);
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
-    // draw(canvas, INITIAL_FACES);
 
     document
         .querySelector('#slider-x')
