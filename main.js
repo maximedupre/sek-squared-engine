@@ -76,6 +76,23 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
 
+    const initialSpeed = 0;
+    const tick = 100;
+    var cumulTime = 0;
+
+    setInterval(() => {
+        const acceleration = 0.981;
+        const speed = initialSpeed + acceleration;
+        const y =
+            INITIAL_ORIGIN[1] +
+            speed +
+            0.5 * acceleration * Math.pow(cumulTime / 1000, 2);
+
+        origin2dTranslation([INITIAL_ORIGIN[0], y, 50], canvas);
+
+        cumulTime += tick;
+    }, tick);
+
     document
         .querySelector('#slider-x')
         .addEventListener('input', (e) =>
