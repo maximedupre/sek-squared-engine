@@ -4,6 +4,18 @@ export function degreesToRadians(degrees) {
     return (degrees * Math.PI) / 180;
 }
 
+export function origin2dTranslation(newOrigin) {
+    for (let face of data.INITIAL_FACES) {
+        for (let point of face.points) {
+            for (let i = 0; i < 2; i++) {
+                point[i] += newOrigin[i] - data.INITIAL_ORIGIN[i];
+            }
+        }
+    }
+
+    data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
+}
+
 export function matrixRotationX(point, degrees) {
     const radians = degreesToRadians(degrees);
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;

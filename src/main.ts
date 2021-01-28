@@ -1,4 +1,9 @@
-import { matrixRotationX, matrixRotationY, matrixRotationZ } from './3d.js';
+import {
+    matrixRotationX,
+    matrixRotationY,
+    matrixRotationZ,
+    origin2dTranslation,
+} from './3d.js';
 import { data } from './data.js';
 
 const tethas = {
@@ -11,8 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    console.log('yo...');
-    origin2dTranslation([canvas.width / 2, canvas.height / 2, 50], canvas);
+    origin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
+    draw(canvas, data.INITIAL_FACES);
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
 
@@ -37,7 +42,8 @@ window.addEventListener('DOMContentLoaded', () => {
             speed +
             0.5 * acceleration * Math.pow(cumulSecs, 2);
 
-        origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50], canvas);
+        origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
+        draw(canvas, data.INITIAL_FACES);
 
         cumulSecs += TICK / 1000;
     }, TICK);
@@ -64,20 +70,6 @@ window.addEventListener('DOMContentLoaded', () => {
             onSlider((e.target as HTMLInputElement).value, 'z', canvas),
         );
 });
-
-function origin2dTranslation(newOrigin, canvas) {
-    for (let face of data.INITIAL_FACES) {
-        for (let point of face.points) {
-            for (let i = 0; i < 2; i++) {
-                point[i] += newOrigin[i] - data.INITIAL_ORIGIN[i];
-            }
-        }
-    }
-
-    data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
-
-    draw(canvas, data.INITIAL_FACES);
-}
 
 function draw(canvas, faces) {
     const ctx = canvas.getContext('2d');
