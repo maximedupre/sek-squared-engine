@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'y', canvas);
 
     const TICK = 100;
-    let cumulSecs = 0;
+    const SENSITIVITY = 2;
     let isSpacePressed = false;
     let acceleration = 0.981;
     let speed = 0;
@@ -36,14 +36,17 @@ window.addEventListener('DOMContentLoaded', () => {
             isSpacePressed = false;
         }
 
-        speed += acceleration * cumulSecs;
+        speed += acceleration * SENSITIVITY;
 
-        const y = mrua(data.INITIAL_ORIGIN[1], speed, acceleration, cumulSecs);
+        const y = mrua(
+            data.INITIAL_ORIGIN[1],
+            speed,
+            acceleration,
+            SENSITIVITY,
+        );
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
         draw(canvas, data.INITIAL_FACES);
-
-        cumulSecs += TICK / 1000;
     }, TICK);
 
     document.addEventListener('keydown', (e) => {
