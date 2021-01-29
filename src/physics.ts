@@ -2,11 +2,7 @@ export function mrua(
     initialPoint: number,
     speed: number,
     acceleration: number,
-    sensitivity: number,
+    cumulSecs: number,
 ) {
-    return (
-        initialPoint +
-        speed * sensitivity +
-        0.5 * (acceleration * Math.pow(sensitivity, 2))
-    );
+    return initialPoint + speed + 0.5 * acceleration * Math.pow(cumulSecs, 2);
 }
