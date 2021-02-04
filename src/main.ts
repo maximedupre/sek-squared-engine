@@ -23,22 +23,23 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'y', canvas);
 
     const TICK = 100;
+    const GRAVITY = 9.81;
     let cumulSecs = 0;
-    let isSpacePressed = false;
-    let acceleration = 0.981;
+    let spaceTicks = 0;
+    let acceleration = 0;
     let speed = 0;
 
     const intervalId = setInterval(() => {
-        if (!isSpacePressed) {
-            acceleration = Math.min(acceleration + 0.1, 0.981);
+        if (spaceTicks <= 0) {
+            acceleration = Math.min(acceleration + 0.4, GRAVITY);
         } else {
-            acceleration = Math.max(acceleration - 0.3, -0.981);
-            isSpacePressed = false;
+            spaceTicks--;
+            acceleration = Math.max(acceleration - 0.5, -GRAVITY);
         }
 
-        speed += acceleration * cumulSecs;
+        speed += acceleration;
 
-        const y = mrua(data.INITIAL_ORIGIN[1], speed, acceleration, cumulSecs);
+        const y = mrua(data.INITIAL_ORIGIN[1], speed);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
 
@@ -63,7 +64,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ') {
-            isSpacePressed = true;
+            spaceTicks = 3;
         }
     });
 
