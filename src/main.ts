@@ -28,26 +28,33 @@ window.addEventListener('DOMContentLoaded', () => {
     let acceleration = 0.981;
     let speed = 0;
 
-    setInterval(() => {
-        const hasHitTop = hasHitLimit(canvas, 'top');
-        const hasHitBottom = hasHitLimit(canvas, 'bottom');
-
-        if (hasHitTop || hasHitBottom) {
-            speed = acceleration = 0;
+    const intervalId = setInterval(() => {
+        if (!isSpacePressed) {
+            acceleration = Math.min(acceleration + 0.1, 0.981);
         } else {
-            if (!isSpacePressed) {
-                acceleration = Math.min(acceleration + 0.1, 0.981);
-            } else {
-                acceleration = Math.max(acceleration - 0.3, -0.981);
-                isSpacePressed = false;
-            }
-
-            speed += acceleration * cumulSecs;
+            acceleration = Math.max(acceleration - 0.3, -0.981);
+            isSpacePressed = false;
         }
+
+        speed += acceleration * cumulSecs;
 
         const y = mrua(data.INITIAL_ORIGIN[1], speed, acceleration, cumulSecs);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
+
+        const topThresspassPx = getLimitThresspassPx(canvas, 'top');
+        const bottomThresspassPx = getLimitThresspassPx(canvas, 'bottom');
+
+        if (topThresspassPx > 0 || bottomThresspassPx < 0) {
+            origin2dTranslation([
+                data.INITIAL_ORIGIN[0],
+                data.INITIAL_ORIGIN[1] +
+                    (topThresspassPx || bottomThresspassPx),
+                50,
+            ]);
+
+            clearInterval(intervalId);
+        }
 
         draw(canvas, data.INITIAL_FACES);
 
@@ -141,7 +148,7 @@ function onSlider(value, axis, canvas) {
     draw(canvas, faces);
 }
 
-function hasHitLimit(canvas, type) {
+function getLimitThresspassPx(canvas, type) {
     const bottom = canvas.height;
 
     for (let face of data.INITIAL_FACES) {
@@ -150,10 +157,10 @@ function hasHitLimit(canvas, type) {
                 (type === 'bottom' && point[1] > bottom) ||
                 (type === 'top' && point[1] < 0)
             ) {
-                return true;
+                return type === 'bottom' ? bottom - point[1] : -point[1];
             }
         }
     }
 
-    return false;
+    return 0;
 }
