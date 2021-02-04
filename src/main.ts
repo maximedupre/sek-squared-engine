@@ -29,7 +29,10 @@ window.addEventListener('DOMContentLoaded', () => {
     let speed = 0;
 
     setInterval(() => {
-        if (hasHitLimit(canvas, 'top') || hasHitLimit(canvas, 'bottom')) {
+        const hasHitTop = hasHitLimit(canvas, 'top');
+        const hasHitBottom = hasHitLimit(canvas, 'bottom');
+
+        if (hasHitTop || hasHitBottom) {
             speed = acceleration = 0;
         } else {
             if (!isSpacePressed) {
