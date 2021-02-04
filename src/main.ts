@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let speed = 0;
 
     setInterval(() => {
-        if (hasHitBottom(canvas)) {
+        if (hasHitLimit(canvas, 'top') || hasHitLimit(canvas, 'bottom')) {
             speed = acceleration = 0;
         } else {
             if (!isSpacePressed) {
@@ -138,12 +138,15 @@ function onSlider(value, axis, canvas) {
     draw(canvas, faces);
 }
 
-function hasHitBottom(canvas) {
+function hasHitLimit(canvas, type) {
     const bottom = canvas.height;
 
     for (let face of data.INITIAL_FACES) {
         for (let point of face.points) {
-            if (point[1] > bottom) {
+            if (
+                (type === 'bottom' && point[1] > bottom) ||
+                (type === 'top' && point[1] < 0)
+            ) {
                 return true;
             }
         }
