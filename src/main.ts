@@ -29,18 +29,23 @@ window.addEventListener('DOMContentLoaded', () => {
     let speed = 0;
 
     setInterval(() => {
-        if (!isSpacePressed) {
-            acceleration = Math.min(acceleration + 0.1, 0.981);
+        if (hasHitBottom(canvas)) {
+            speed = acceleration = 0;
         } else {
-            acceleration = Math.max(acceleration - 0.3, -0.981);
-            isSpacePressed = false;
-        }
+            if (!isSpacePressed) {
+                acceleration = Math.min(acceleration + 0.1, 0.981);
+            } else {
+                acceleration = Math.max(acceleration - 0.3, -0.981);
+                isSpacePressed = false;
+            }
 
-        speed += acceleration * cumulSecs;
+            speed += acceleration * cumulSecs;
+        }
 
         const y = mrua(data.INITIAL_ORIGIN[1], speed, acceleration, cumulSecs);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
+
         draw(canvas, data.INITIAL_FACES);
 
         cumulSecs += TICK / 1000;
@@ -131,4 +136,18 @@ function onSlider(value, axis, canvas) {
     }
 
     draw(canvas, faces);
+}
+
+function hasHitBottom(canvas) {
+    const bottom = canvas.height;
+
+    for (let face of data.INITIAL_FACES) {
+        for (let point of face.points) {
+            if (point[1] > bottom) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
