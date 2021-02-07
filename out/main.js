@@ -15,8 +15,7 @@ window.addEventListener('DOMContentLoaded', function () {
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
     var METERS_PER_PX = 10;
-    var INTERVAL_IN_MS = 100;
-    var INTERVAL_IN_S = INTERVAL_IN_MS / 1000;
+    var INTERVAL_IN_S = 0.1;
     // m/s^2
     var positiveAcceleration = 0;
     // m/s
@@ -25,7 +24,7 @@ window.addEventListener('DOMContentLoaded', function () {
     var intervalId = setInterval(function () {
         if (nbTicksForSpace > 0) {
             nbTicksForSpace--;
-            positiveAcceleration += getAcceleration(GRAVITY, INTERVAL_IN_S);
+            positiveAcceleration += getAcceleration(GRAVITY * 2, INTERVAL_IN_S);
         }
         else {
             positiveAcceleration -= getAcceleration(GRAVITY * 5, INTERVAL_IN_S);
@@ -47,10 +46,10 @@ window.addEventListener('DOMContentLoaded', function () {
             clearInterval(intervalId);
         }
         draw(canvas, data.INITIAL_FACES);
-    }, INTERVAL_IN_MS);
+    }, INTERVAL_IN_S * 1000);
     document.addEventListener('keydown', function (e) {
         if (e.key === ' ') {
-            nbTicksForSpace = 5;
+            nbTicksForSpace = 4;
         }
     });
     document
