@@ -1,3 +1,3 @@
-export function mrua(initialPoint, speed) {
-    return initialPoint + speed;
+export function mrua(y, speed, ticksInSeconds) {
+    return y - speed * ticksInSeconds;
 }

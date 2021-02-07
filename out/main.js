@@ -1,4 +1,4 @@
-import { matrixRotationX, matrixRotationY, matrixRotationZ, origin2dTranslation, } from './3d.js';
+import { matrixRotationX, matrixRotationY, matrixRotationZ, origin2dTranslation } from './3d.js';
 import { data } from './data.js';
 import { mrua } from './physics.js';
 var tethas = {
@@ -14,22 +14,32 @@ window.addEventListener('DOMContentLoaded', function () {
     draw(canvas, data.INITIAL_FACES);
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
-    var TICK = 100;
+    var METERS_PER_PX = 10;
+    var TICK_IN_MS = 100;
+    var TICKS_IN_SECONDS = TICK_IN_MS / 1000;
+    // m/s^2
     var GRAVITY = 9.81;
-    var cumulSecs = 0;
-    var spaceTicks = 0;
-    var acceleration = 0;
+    // m/s^2
+    var positiveAcceleration = 0;
+    // m/s
     var speed = 0;
+    var cumulSeconds = 0;
+    var nbTicksForSpace = 0;
     var intervalId = setInterval(function () {
-        if (spaceTicks <= 0) {
-            acceleration = Math.min(acceleration + 0.4, GRAVITY);
+        if (nbTicksForSpace > 0) {
+            nbTicksForSpace--;
+            positiveAcceleration += GRAVITY * TICKS_IN_SECONDS;
         }
         else {
-            spaceTicks--;
-            acceleration = Math.max(acceleration - 0.5, -GRAVITY);
+            positiveAcceleration -= GRAVITY * 5 * TICKS_IN_SECONDS;
+            positiveAcceleration = Math.max(0, positiveAcceleration);
         }
-        speed += acceleration;
-        var y = mrua(data.INITIAL_ORIGIN[1], speed);
+        speed += (positiveAcceleration - GRAVITY) * TICKS_IN_SECONDS;
+        var y = mrua(data.INITIAL_ORIGIN[1], speed * METERS_PER_PX, TICKS_IN_SECONDS);
+        console.log('cumulSeconds', cumulSeconds);
+        console.log('y', y);
+        console.log('speed', speed);
+        console.log('acceleration', positiveAcceleration);
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
         var topThresspassPx = getLimitThresspassPx(canvas, 'top');
         var bottomThresspassPx = getLimitThresspassPx(canvas, 'bottom');
@@ -43,11 +53,11 @@ window.addEventListener('DOMContentLoaded', function () {
             clearInterval(intervalId);
         }
         draw(canvas, data.INITIAL_FACES);
-        cumulSecs += TICK / 1000;
-    }, TICK);
+        cumulSeconds += TICK_IN_MS / 1000;
+    }, TICK_IN_MS);
     document.addEventListener('keydown', function (e) {
         if (e.key === ' ') {
-            spaceTicks = 2;
+            nbTicksForSpace = 5;
         }
     });
     document
