@@ -2,7 +2,7 @@ import {
     matrixRotationX,
     matrixRotationY,
     matrixRotationZ,
-    origin2dTranslation
+    origin2dTranslation,
 } from './3d.js';
 import { data } from './data.js';
 import { mrua } from './physics.js';
@@ -51,11 +51,6 @@ window.addEventListener('DOMContentLoaded', () => {
             speed * METERS_PER_PX,
             TICKS_IN_SECONDS,
         );
-
-        console.log('cumulSeconds', cumulSeconds);
-        console.log('y', y);
-        console.log('speed', speed);
-        console.log('acceleration', positiveAcceleration);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
 
