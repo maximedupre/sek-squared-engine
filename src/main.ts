@@ -34,7 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if (nbTicksForSpace > 0) {
             nbTicksForSpace--;
 
-            positiveAcceleration += getAcceleration(GRAVITY, INTERVAL_IN_S);
+            positiveAcceleration += getAcceleration(GRAVITY * 2, INTERVAL_IN_S);
         } else {
             positiveAcceleration -= getAcceleration(GRAVITY * 5, INTERVAL_IN_S);
             positiveAcceleration = Math.max(0, positiveAcceleration);
@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ') {
-            nbTicksForSpace = 5;
+            nbTicksForSpace = 4;
         }
     });
 
