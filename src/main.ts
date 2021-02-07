@@ -15,6 +15,7 @@ const tethas = {
 let nbTicksForSpace = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
+    const axis = ['x', 'y', 'z'];
     const canvas = document.querySelector('canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -23,7 +24,6 @@ window.addEventListener('DOMContentLoaded', () => {
     draw(canvas, data.INITIAL_FACES);
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
-
     start(canvas);
 
     document.addEventListener('keydown', (e) => {
@@ -31,8 +31,6 @@ window.addEventListener('DOMContentLoaded', () => {
             nbTicksForSpace = 4;
         }
     });
-
-    const axis = ['x', 'y', 'z'];
 
     for (let a of axis) {
         document
