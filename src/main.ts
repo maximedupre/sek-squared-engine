@@ -23,21 +23,26 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'y', canvas);
 
     const TICK = 100;
+    // m/s^2
     const GRAVITY = 9.81;
-    let cumulSecs = 0;
-    let spaceTicks = 0;
+    // m/s^2
     let acceleration = 0;
+    // m/s
     let speed = 0;
+    let cumulSeconds = 0;
+    let spaceTicks = 0;
 
     const intervalId = setInterval(() => {
-        if (spaceTicks <= 0) {
-            acceleration = Math.min(acceleration + 0.4, GRAVITY);
-        } else {
+        if (spaceTicks > 0) {
             spaceTicks--;
-            acceleration = Math.max(acceleration - 0.5, -GRAVITY);
+
+            acceleration += GRAVITY * 3 * 0.1;
+        } else {
+            acceleration -= GRAVITY * 0.1;
+            acceleration = Math.min(0, acceleration);
         }
 
-        speed += acceleration;
+        speed += acceleration * 0.1 - GRAVITY * 0.1;
 
         const y = mrua(data.INITIAL_ORIGIN[1], speed);
 
@@ -59,7 +64,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         draw(canvas, data.INITIAL_FACES);
 
-        cumulSecs += TICK / 1000;
+        cumulSeconds += TICK / 1000;
     }, TICK);
 
     document.addEventListener('keydown', (e) => {

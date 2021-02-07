@@ -1,3 +1,3 @@
-export function mrua(initialPoint: number, speed: number) {
-    return initialPoint + speed;
+export function mrua(y: number, speed: number) {
+    return y - speed;
 }
