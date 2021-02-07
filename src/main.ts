@@ -29,7 +29,6 @@ window.addEventListener('DOMContentLoaded', () => {
     let positiveAcceleration = 0;
     // m/s
     let speed = 0;
-    let cumulSeconds = 0;
     let nbTicksForSpace = 0;
 
     const intervalId = setInterval(() => {
@@ -65,8 +64,6 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         draw(canvas, data.INITIAL_FACES);
-
-        cumulSeconds += INTERVAL_IN_MS / 1000;
     }, INTERVAL_IN_MS);
 
     document.addEventListener('keydown', (e) => {
