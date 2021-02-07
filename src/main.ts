@@ -2,7 +2,7 @@ import {
     matrixRotationX,
     matrixRotationY,
     matrixRotationZ,
-    origin2dTranslation,
+    origin2dTranslation
 } from './3d.js';
 import { data } from './data.js';
 import { mrua } from './physics.js';
@@ -22,6 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
 
+    const METERS_PER_PX = 10;
     const TICK_IN_MS = 100;
     const TICKS_IN_SECONDS = TICK_IN_MS / 1000;
     // m/s^2
@@ -37,20 +38,24 @@ window.addEventListener('DOMContentLoaded', () => {
         if (nbTicksForSpace > 0) {
             nbTicksForSpace--;
 
-            positiveAcceleration += GRAVITY * 3 * TICKS_IN_SECONDS;
+            positiveAcceleration += GRAVITY * TICKS_IN_SECONDS;
         } else {
-            positiveAcceleration -= GRAVITY * TICKS_IN_SECONDS;
+            positiveAcceleration -= GRAVITY * 5 * TICKS_IN_SECONDS;
             positiveAcceleration = Math.max(0, positiveAcceleration);
         }
 
         speed += (positiveAcceleration - GRAVITY) * TICKS_IN_SECONDS;
 
-        const y = mrua(data.INITIAL_ORIGIN[1], speed, TICKS_IN_SECONDS);
+        const y = mrua(
+            data.INITIAL_ORIGIN[1],
+            speed * METERS_PER_PX,
+            TICKS_IN_SECONDS,
+        );
 
-        // console.log('cumulSeconds', cumulSeconds);
-        // console.log('y', y);
-        // console.log('speed', speed);
-        // console.log('acceleration', positiveAcceleration);
+        console.log('cumulSeconds', cumulSeconds);
+        console.log('y', y);
+        console.log('speed', speed);
+        console.log('acceleration', positiveAcceleration);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
 
@@ -75,7 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ') {
-            nbTicksForSpace = 3;
+            nbTicksForSpace = 5;
         }
     });
 
