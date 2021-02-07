@@ -23,8 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'y', canvas);
 
     const METERS_PER_PX = 10;
-    const INTERVAL_IN_MS = 100;
-    const INTERVAL_IN_S = INTERVAL_IN_MS / 1000;
+    const INTERVAL_IN_S = 0.1;
     // m/s^2
     let positiveAcceleration = 0;
     // m/s
@@ -64,7 +63,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         draw(canvas, data.INITIAL_FACES);
-    }, INTERVAL_IN_MS);
+    }, INTERVAL_IN_S * 1000);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ') {
