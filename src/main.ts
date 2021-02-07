@@ -5,7 +5,7 @@ import {
     origin2dTranslation,
 } from './3d.js';
 import { data } from './data.js';
-import { mrua } from './physics.js';
+import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
 
 const tethas = {
     x: 0,
@@ -26,8 +26,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const TICK_IN_MS = 100;
     const TICKS_IN_SECONDS = TICK_IN_MS / 1000;
     // m/s^2
-    const GRAVITY = 9.81;
-    // m/s^2
     let positiveAcceleration = 0;
     // m/s
     let speed = 0;
@@ -38,19 +36,20 @@ window.addEventListener('DOMContentLoaded', () => {
         if (nbTicksForSpace > 0) {
             nbTicksForSpace--;
 
-            positiveAcceleration += GRAVITY * TICKS_IN_SECONDS;
+            positiveAcceleration += getAcceleration(GRAVITY, TICKS_IN_SECONDS);
         } else {
-            positiveAcceleration -= GRAVITY * 5 * TICKS_IN_SECONDS;
+            positiveAcceleration -= getAcceleration(
+                GRAVITY * 5,
+                TICKS_IN_SECONDS,
+            );
             positiveAcceleration = Math.max(0, positiveAcceleration);
         }
 
-        speed += (positiveAcceleration - GRAVITY) * TICKS_IN_SECONDS;
+        speed += getSpeed(positiveAcceleration - GRAVITY, TICKS_IN_SECONDS);
 
-        const y = mrua(
-            data.INITIAL_ORIGIN[1],
-            speed * METERS_PER_PX,
-            TICKS_IN_SECONDS,
-        );
+        const speedInPx = speed * METERS_PER_PX;
+        const y =
+            data.INITIAL_ORIGIN[1] - getMovement(speedInPx, TICKS_IN_SECONDS);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
 
