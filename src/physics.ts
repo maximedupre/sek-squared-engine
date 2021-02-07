@@ -1,3 +1,3 @@
-export function mrua(y: number, speed: number) {
-    return y - speed;
+export function mrua(y: number, speed: number, ticksInSeconds: number) {
+    return y - speed * ticksInSeconds;
 }

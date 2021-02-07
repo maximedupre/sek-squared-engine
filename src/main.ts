@@ -27,7 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // m/s^2
     const GRAVITY = 9.81;
     // m/s^2
-    let acceleration = 0;
+    let positiveAcceleration = 0;
     // m/s
     let speed = 0;
     let cumulSeconds = 0;
@@ -37,15 +37,20 @@ window.addEventListener('DOMContentLoaded', () => {
         if (nbTicksForSpace > 0) {
             nbTicksForSpace--;
 
-            acceleration += GRAVITY * 3 * TICKS_IN_SECONDS;
+            positiveAcceleration += GRAVITY * 3 * TICKS_IN_SECONDS;
         } else {
-            acceleration -= GRAVITY * TICKS_IN_SECONDS;
-            acceleration = Math.min(0, acceleration);
+            positiveAcceleration -= GRAVITY * TICKS_IN_SECONDS;
+            positiveAcceleration = Math.max(0, positiveAcceleration);
         }
 
-        speed += acceleration * TICKS_IN_SECONDS - GRAVITY * TICKS_IN_SECONDS;
+        speed += (positiveAcceleration - GRAVITY) * TICKS_IN_SECONDS;
 
-        const y = mrua(data.INITIAL_ORIGIN[1], speed);
+        const y = mrua(data.INITIAL_ORIGIN[1], speed, TICKS_IN_SECONDS);
+
+        // console.log('cumulSeconds', cumulSeconds);
+        // console.log('y', y);
+        // console.log('speed', speed);
+        // console.log('acceleration', positiveAcceleration);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
 
