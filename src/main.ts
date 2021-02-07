@@ -71,21 +71,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document
-        .querySelector('#slider-x')
-        .addEventListener('input', (e: KeyboardEvent) =>
-            onSlider((e.target as HTMLInputElement).value, 'x', canvas),
-        );
-    document
-        .querySelector('#slider-y')
-        .addEventListener('input', (e) =>
-            onSlider((e.target as HTMLInputElement).value, 'y', canvas),
-        );
-    document
-        .querySelector('#slider-z')
-        .addEventListener('input', (e) =>
-            onSlider((e.target as HTMLInputElement).value, 'z', canvas),
-        );
+    const axis = ['x', 'y', 'z'];
+
+    for (let a of axis) {
+        document
+            .querySelector(`#slider-${a}`)
+            .addEventListener('input', (e: KeyboardEvent) =>
+                onSlider((e.target as HTMLInputElement).value, a, canvas),
+            );
+    }
 });
 
 function draw(canvas, faces) {
