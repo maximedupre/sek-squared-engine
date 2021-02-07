@@ -12,6 +12,8 @@ const tethas = {
     y: 0,
     z: 0,
 };
+let nbTicksForSpace = 0;
+
 window.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
     canvas.width = window.innerWidth;
@@ -22,13 +24,32 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'x', canvas);
     onSlider(-10, 'y', canvas);
 
+    start(canvas);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === ' ') {
+            nbTicksForSpace = 4;
+        }
+    });
+
+    const axis = ['x', 'y', 'z'];
+
+    for (let a of axis) {
+        document
+            .querySelector(`#slider-${a}`)
+            .addEventListener('input', (e: KeyboardEvent) =>
+                onSlider((e.target as HTMLInputElement).value, a, canvas),
+            );
+    }
+});
+
+function start(canvas) {
     const METERS_PER_PX = 10;
     const INTERVAL_IN_S = 0.1;
     // m/s^2
     let positiveAcceleration = 0;
     // m/s
     let speed = 0;
-    let nbTicksForSpace = 0;
 
     const intervalId = setInterval(() => {
         if (nbTicksForSpace > 0) {
@@ -64,23 +85,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         draw(canvas, data.INITIAL_FACES);
     }, INTERVAL_IN_S * 1000);
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === ' ') {
-            nbTicksForSpace = 4;
-        }
-    });
-
-    const axis = ['x', 'y', 'z'];
-
-    for (let a of axis) {
-        document
-            .querySelector(`#slider-${a}`)
-            .addEventListener('input', (e: KeyboardEvent) =>
-                onSlider((e.target as HTMLInputElement).value, a, canvas),
-            );
-    }
-});
+}
 
 function draw(canvas, faces) {
     const ctx = canvas.getContext('2d');
