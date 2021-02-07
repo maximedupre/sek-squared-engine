@@ -23,8 +23,8 @@ window.addEventListener('DOMContentLoaded', () => {
     onSlider(-10, 'y', canvas);
 
     const METERS_PER_PX = 10;
-    const TICK_IN_MS = 100;
-    const TICKS_IN_SECONDS = TICK_IN_MS / 1000;
+    const INTERVAL_IN_MS = 100;
+    const INTERVAL_IN_S = INTERVAL_IN_MS / 1000;
     // m/s^2
     let positiveAcceleration = 0;
     // m/s
@@ -36,20 +36,17 @@ window.addEventListener('DOMContentLoaded', () => {
         if (nbTicksForSpace > 0) {
             nbTicksForSpace--;
 
-            positiveAcceleration += getAcceleration(GRAVITY, TICKS_IN_SECONDS);
+            positiveAcceleration += getAcceleration(GRAVITY, INTERVAL_IN_S);
         } else {
-            positiveAcceleration -= getAcceleration(
-                GRAVITY * 5,
-                TICKS_IN_SECONDS,
-            );
+            positiveAcceleration -= getAcceleration(GRAVITY * 5, INTERVAL_IN_S);
             positiveAcceleration = Math.max(0, positiveAcceleration);
         }
 
-        speed += getSpeed(positiveAcceleration - GRAVITY, TICKS_IN_SECONDS);
+        speed += getSpeed(positiveAcceleration - GRAVITY, INTERVAL_IN_S);
 
         const speedInPx = speed * METERS_PER_PX;
         const y =
-            data.INITIAL_ORIGIN[1] - getMovement(speedInPx, TICKS_IN_SECONDS);
+            data.INITIAL_ORIGIN[1] - getMovement(speedInPx, INTERVAL_IN_S);
 
         origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
 
@@ -69,8 +66,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         draw(canvas, data.INITIAL_FACES);
 
-        cumulSeconds += TICK_IN_MS / 1000;
-    }, TICK_IN_MS);
+        cumulSeconds += INTERVAL_IN_MS / 1000;
+    }, INTERVAL_IN_MS);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ') {
