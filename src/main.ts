@@ -5,8 +5,8 @@ import {
     pointMatrixRotationZ,
     pointMatrixScaleZ as pointMatrixScale,
 } from './3d.js';
-import { data, Face, Point } from './data.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
+import playerCube, { Face, Point } from './player-cube.js';
 
 const INTERVAL_IN_S = 0.01;
 const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.height = window.innerHeight;
 
     facesOrigin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
-    draw(canvas, data.INITIAL_FACES);
+    draw(canvas, playerCube.INITIAL_FACES);
     onSliderRotation(-10, 'x', canvas);
     onSliderRotation(-10, 'y', canvas);
     start(canvas);
@@ -77,17 +77,18 @@ function start(canvas: HTMLCanvasElement) {
 
         const speedInPx = speed * METERS_PER_PX;
         const y =
-            data.INITIAL_ORIGIN[1] - getMovement(speedInPx, INTERVAL_IN_S);
+            playerCube.INITIAL_ORIGIN[1] -
+            getMovement(speedInPx, INTERVAL_IN_S);
 
-        facesOrigin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
+        facesOrigin2dTranslation([playerCube.INITIAL_ORIGIN[0], y, 50]);
 
         const topThresspassPx = getLimitThresspassPx(canvas, 'top');
         const bottomThresspassPx = getLimitThresspassPx(canvas, 'bottom');
 
         if (topThresspassPx > 0 || bottomThresspassPx < 0) {
             facesOrigin2dTranslation([
-                data.INITIAL_ORIGIN[0],
-                data.INITIAL_ORIGIN[1] +
+                playerCube.INITIAL_ORIGIN[0],
+                playerCube.INITIAL_ORIGIN[1] +
                     (topThresspassPx || bottomThresspassPx),
                 50,
             ]);
@@ -97,7 +98,7 @@ function start(canvas: HTMLCanvasElement) {
                 'block';
         }
 
-        draw(canvas, data.INITIAL_FACES);
+        draw(canvas, playerCube.INITIAL_FACES);
         (document.querySelector(
             '.timer',
         ) as any).textContent = `${cumulSecs.toFixed(2)} SECONDS`;
@@ -149,7 +150,7 @@ function onSliderRotation(
     const tethaDelta = tethas[axis] - value;
     tethas[axis] = value;
 
-    for (let face of data.INITIAL_FACES) {
+    for (let face of playerCube.INITIAL_FACES) {
         const points = [];
 
         for (let point of face.points) {
@@ -172,7 +173,7 @@ function onSliderRotation(
             points,
         });
 
-        data.INITIAL_FACES = faces;
+        playerCube.INITIAL_FACES = faces;
     }
 
     draw(canvas, faces);
@@ -182,7 +183,7 @@ function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
     const scaleRatio = +value / scale;
     scale = +value;
 
-    for (let face of data.INITIAL_FACES) {
+    for (let face of playerCube.INITIAL_FACES) {
         for (let point of face.points) {
             const newPoint = pointMatrixScale(point, scaleRatio);
             point[0] = newPoint[0];
@@ -191,13 +192,13 @@ function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
         }
     }
 
-    draw(canvas, data.INITIAL_FACES);
+    draw(canvas, playerCube.INITIAL_FACES);
 }
 
 function getLimitThresspassPx(canvas: HTMLCanvasElement, type: string) {
     const bottom = canvas.height;
 
-    for (let face of data.INITIAL_FACES) {
+    for (let face of playerCube.INITIAL_FACES) {
         for (let point of face.points) {
             if (
                 (type === 'bottom' && point[1] > bottom) ||

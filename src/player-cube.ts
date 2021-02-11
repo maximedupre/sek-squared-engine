@@ -13,7 +13,7 @@ interface Data {
     INITIAL_FACES: Face[];
 }
 
-export const data: Data = {
+export default {
     INITIAL_ORIGIN: [50, 50, 50],
     INITIAL_FACES: [
         {
@@ -77,4 +77,4 @@ export const data: Data = {
             ],
         },
     ],
-};
+} as Data;

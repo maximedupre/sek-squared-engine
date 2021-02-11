@@ -1,24 +1,28 @@
-import { data, Origin, Point } from './data.js';
+import playerCube, { Origin, Point } from './player-cube.js';
 
 export function degreesToRadians(degrees: number) {
     return (degrees * Math.PI) / 180;
 }
 
 export function facesOrigin2dTranslation(newOrigin: Origin) {
-    for (let face of data.INITIAL_FACES) {
+    for (let face of playerCube.INITIAL_FACES) {
         for (let point of face.points) {
             for (let i = 0; i < 2; i++) {
-                point[i] += newOrigin[i] - data.INITIAL_ORIGIN[i];
+                point[i] += newOrigin[i] - playerCube.INITIAL_ORIGIN[i];
             }
         }
     }
 
-    data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
+    playerCube.INITIAL_ORIGIN = [
+        newOrigin[0],
+        newOrigin[1],
+        playerCube.INITIAL_ORIGIN[2],
+    ];
 }
 
 export function pointMatrixRotationX(point: Point, tethaDelta: number) {
     const radians = degreesToRadians(tethaDelta);
-    const [originX, originY, originZ] = data.INITIAL_ORIGIN;
+    const [originX, originY, originZ] = playerCube.INITIAL_ORIGIN;
     const realX = point[0] - originX;
     const realY = point[1] - originY;
     const realZ = point[2] - originZ;
@@ -33,7 +37,7 @@ export function pointMatrixRotationX(point: Point, tethaDelta: number) {
 
 export function pointMatrixRotationY(point: Point, tethaDelta: number) {
     const radians = degreesToRadians(tethaDelta);
-    const [originX, originY, originZ] = data.INITIAL_ORIGIN;
+    const [originX, originY, originZ] = playerCube.INITIAL_ORIGIN;
     const realX = point[0] - originX;
     const realY = point[1] - originY;
     const realZ = point[2] - originZ;
@@ -48,7 +52,7 @@ export function pointMatrixRotationY(point: Point, tethaDelta: number) {
 
 export function pointMatrixRotationZ(point: Point, degrees: number) {
     const radians = degreesToRadians(degrees);
-    const [originX, originY, originZ] = data.INITIAL_ORIGIN;
+    const [originX, originY, originZ] = playerCube.INITIAL_ORIGIN;
     const realX = point[0] - originX;
     const realY = point[1] - originY;
     const realZ = point[2] - originZ;
@@ -62,7 +66,7 @@ export function pointMatrixRotationZ(point: Point, degrees: number) {
 }
 
 export function pointMatrixScaleZ(point: Point, scaleRatio: number) {
-    const [originX, originY, originZ] = data.INITIAL_ORIGIN;
+    const [originX, originY, originZ] = playerCube.INITIAL_ORIGIN;
     let realX = point[0] - originX;
     let realY = point[1] - originY;
     let realZ = point[2] - originZ;
