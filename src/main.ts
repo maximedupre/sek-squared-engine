@@ -82,6 +82,8 @@ function start(canvas) {
             ]);
 
             clearInterval(intervalId);
+            (document.querySelector('.gameover') as any).style.display =
+                'block';
         }
 
         draw(canvas, data.INITIAL_FACES);
