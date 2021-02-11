@@ -1,4 +1,19 @@
-export const data = {
+export type Origin = [number, number, number];
+
+export type Point = number[];
+
+export interface Face {
+    name: string;
+    color: string;
+    points: Point[];
+}
+
+interface Data {
+    INITIAL_ORIGIN: Origin;
+    INITIAL_FACES: Face[];
+}
+
+export const data: Data = {
     INITIAL_ORIGIN: [50, 50, 50],
     INITIAL_FACES: [
         {

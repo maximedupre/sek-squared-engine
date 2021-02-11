@@ -1,10 +1,10 @@
-import { data } from './data.js';
+import { data, Origin, Point } from './data.js';
 
-export function degreesToRadians(degrees) {
+export function degreesToRadians(degrees: number) {
     return (degrees * Math.PI) / 180;
 }
 
-export function facesOrigin2dTranslation(newOrigin) {
+export function facesOrigin2dTranslation(newOrigin: Origin) {
     for (let face of data.INITIAL_FACES) {
         for (let point of face.points) {
             for (let i = 0; i < 2; i++) {
@@ -16,7 +16,7 @@ export function facesOrigin2dTranslation(newOrigin) {
     data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
 }
 
-export function pointMatrixRotationX(point, tethaDelta) {
+export function pointMatrixRotationX(point: Point, tethaDelta: number) {
     const radians = degreesToRadians(tethaDelta);
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
     const realX = point[0] - originX;
@@ -31,7 +31,7 @@ export function pointMatrixRotationX(point, tethaDelta) {
     return [x + originX, y + originY, z + originZ];
 }
 
-export function pointMatrixRotationY(point, tethaDelta) {
+export function pointMatrixRotationY(point: Point, tethaDelta: number) {
     const radians = degreesToRadians(tethaDelta);
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
     const realX = point[0] - originX;
@@ -46,7 +46,7 @@ export function pointMatrixRotationY(point, tethaDelta) {
     return [x + originX, y + originY, z + originZ];
 }
 
-export function pointMatrixRotationZ(point, degrees) {
+export function pointMatrixRotationZ(point: Point, degrees: number) {
     const radians = degreesToRadians(degrees);
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
     const realX = point[0] - originX;
@@ -61,7 +61,7 @@ export function pointMatrixRotationZ(point, degrees) {
     return [x + originX, y + originY, z + originZ];
 }
 
-export function pointMatrixScaleZ(point, scaleRatio) {
+export function pointMatrixScaleZ(point: Point, scaleRatio: number) {
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
     let realX = point[0] - originX;
     let realY = point[1] - originY;

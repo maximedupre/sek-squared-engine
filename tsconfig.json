@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "strict": true,
         "module": "ESNEXT",
         "outDir": "public/out",
         "target": "ES3"

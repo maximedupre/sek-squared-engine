@@ -5,7 +5,7 @@ import {
     pointMatrixRotationZ,
     pointMatrixScaleZ as pointMatrixScale,
 } from './3d.js';
-import { data } from './data.js';
+import { data, Face, Point } from './data.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
 
 const INTERVAL_IN_S = 0.01;
@@ -20,8 +20,8 @@ let scale = 1;
 let nbIntervalsForSpace = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
-    const axis = ['x', 'y', 'z'];
-    const canvas = document.querySelector('canvas');
+    const axis: any[] = ['x', 'y', 'z'];
+    const canvas = document.querySelector('canvas') as HTMLCanvasElement;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -39,25 +39,21 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     for (let a of axis) {
-        document
-            .querySelector(`#slider-${a}-rotation`)
-            .addEventListener('input', (e: KeyboardEvent) =>
-                onSliderRotation(
-                    (e.target as HTMLInputElement).value,
-                    a,
-                    canvas,
-                ),
-            );
+        (document.querySelector(
+            `#slider-${a}-rotation`,
+        ) as HTMLInputElement).addEventListener('input', (e: Event) => {
+            onSliderRotation(+(e.target as HTMLInputElement).value, a, canvas);
+        });
     }
 
-    document
-        .querySelector(`#slider-z-scaling`)
-        .addEventListener('input', (e: KeyboardEvent) =>
-            onSliderScaling((e.target as HTMLInputElement).value, canvas),
-        );
+    (document.querySelector(
+        `#slider-z-scaling`,
+    ) as HTMLInputElement).addEventListener('input', (e: Event) => {
+        onSliderScaling((e.target as HTMLInputElement).value, canvas);
+    });
 });
 
-function start(canvas) {
+function start(canvas: HTMLCanvasElement) {
     const METERS_PER_PX = 10;
     // m/s^2
     let positiveAcceleration = 0;
@@ -102,14 +98,20 @@ function start(canvas) {
     }, INTERVAL_IN_S * 1000);
 }
 
-function draw(canvas, faces) {
-    const ctx = canvas.getContext('2d');
+function draw(canvas: HTMLCanvasElement, faces: Face[]) {
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     faces.sort((a, b) => {
-        const sumZA = a.points.reduce((acc, value) => acc + value[2], 0);
+        const sumZA = a.points.reduce(
+            (acc: number, value: Point) => acc + value[2],
+            0,
+        );
 
-        const sumZB = b.points.reduce((acc, value) => acc + value[2], 0);
+        const sumZB = b.points.reduce(
+            (acc: number, value: Point) => acc + value[2],
+            0,
+        );
 
         return sumZA < sumZB ? 1 : -1;
     });
@@ -132,7 +134,11 @@ function draw(canvas, faces) {
     }
 }
 
-function onSliderRotation(value, axis, canvas) {
+function onSliderRotation(
+    value: number,
+    axis: 'x' | 'y' | 'z',
+    canvas: HTMLCanvasElement,
+) {
     const faces = [];
     const tethaDelta = tethas[axis] - value;
     tethas[axis] = value;
@@ -182,7 +188,7 @@ function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
     draw(canvas, data.INITIAL_FACES);
 }
 
-function getLimitThresspassPx(canvas, type) {
+function getLimitThresspassPx(canvas: HTMLCanvasElement, type: string) {
     const bottom = canvas.height;
 
     for (let face of data.INITIAL_FACES) {
