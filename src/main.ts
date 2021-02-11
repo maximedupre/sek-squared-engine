@@ -59,8 +59,11 @@ function start(canvas: HTMLCanvasElement) {
     let positiveAcceleration = 0;
     // m/s
     let speed = 0;
+    let cumulSecs = 0;
 
     const intervalId = setInterval(() => {
+        cumulSecs += INTERVAL_IN_S;
+
         if (nbIntervalsForSpace > 0) {
             nbIntervalsForSpace--;
 
@@ -95,6 +98,9 @@ function start(canvas: HTMLCanvasElement) {
         }
 
         draw(canvas, data.INITIAL_FACES);
+        (document.querySelector(
+            '.timer',
+        ) as any).textContent = `${cumulSecs.toFixed(2)} SECONDS`;
     }, INTERVAL_IN_S * 1000);
 }
 

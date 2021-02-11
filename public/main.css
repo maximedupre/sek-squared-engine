@@ -32,3 +32,9 @@ canvas {
     bottom: 0;
     right: 0;
 }
+
+.timer {
+    position: fixed;
+    right: 10px;
+    font-size: 20px;
+}
