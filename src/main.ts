@@ -1,9 +1,9 @@
 import {
-    matrixRotationX,
-    matrixRotationY,
-    matrixRotationZ,
-    matrixScaleZ,
-    origin2dTranslation,
+    facesOrigin2dTranslation,
+    pointMatrixRotationX,
+    pointMatrixRotationY,
+    pointMatrixRotationZ,
+    pointMatrixScaleZ as pointMatrixScale,
 } from './3d.js';
 import { data } from './data.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    origin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
+    facesOrigin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
     draw(canvas, data.INITIAL_FACES);
     onSliderRotation(-10, 'x', canvas);
     onSliderRotation(-10, 'y', canvas);
@@ -80,13 +80,13 @@ function start(canvas) {
         const y =
             data.INITIAL_ORIGIN[1] - getMovement(speedInPx, INTERVAL_IN_S);
 
-        origin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
+        facesOrigin2dTranslation([data.INITIAL_ORIGIN[0], y, 50]);
 
         const topThresspassPx = getLimitThresspassPx(canvas, 'top');
         const bottomThresspassPx = getLimitThresspassPx(canvas, 'bottom');
 
         if (topThresspassPx > 0 || bottomThresspassPx < 0) {
-            origin2dTranslation([
+            facesOrigin2dTranslation([
                 data.INITIAL_ORIGIN[0],
                 data.INITIAL_ORIGIN[1] +
                     (topThresspassPx || bottomThresspassPx),
@@ -144,11 +144,11 @@ function onSliderRotation(value, axis, canvas) {
             let newPoint;
 
             if (axis === 'x') {
-                newPoint = matrixRotationX(point, tethaDelta);
+                newPoint = pointMatrixRotationX(point, tethaDelta);
             } else if (axis === 'y') {
-                newPoint = matrixRotationY(point, tethaDelta);
+                newPoint = pointMatrixRotationY(point, tethaDelta);
             } else {
-                newPoint = matrixRotationZ(point, tethaDelta);
+                newPoint = pointMatrixRotationZ(point, tethaDelta);
             }
 
             points.push(newPoint);
@@ -167,23 +167,18 @@ function onSliderRotation(value, axis, canvas) {
 }
 
 function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
-    const tmpOriginX = data.INITIAL_ORIGIN[0];
-    const tmpOriginY = data.INITIAL_ORIGIN[1];
-    const tmpOriginZ = data.INITIAL_ORIGIN[2];
     const scaleRatio = +value / scale;
     scale = +value;
 
     for (let face of data.INITIAL_FACES) {
         for (let point of face.points) {
-            matrixScaleZ(point, scaleRatio);
+            const newPoint = pointMatrixScale(point, scaleRatio);
+            point[0] = newPoint[0];
+            point[1] = newPoint[1];
+            point[2] = newPoint[2];
         }
     }
 
-    data.INITIAL_ORIGIN[0] *= scaleRatio;
-    data.INITIAL_ORIGIN[1] *= scaleRatio;
-    data.INITIAL_ORIGIN[2] *= scaleRatio;
-
-    origin2dTranslation([tmpOriginX, tmpOriginY, tmpOriginZ]);
     draw(canvas, data.INITIAL_FACES);
 }
 

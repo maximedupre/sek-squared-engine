@@ -4,7 +4,7 @@ export function degreesToRadians(degrees) {
     return (degrees * Math.PI) / 180;
 }
 
-export function origin2dTranslation(newOrigin) {
+export function facesOrigin2dTranslation(newOrigin) {
     for (let face of data.INITIAL_FACES) {
         for (let point of face.points) {
             for (let i = 0; i < 2; i++) {
@@ -16,7 +16,7 @@ export function origin2dTranslation(newOrigin) {
     data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
 }
 
-export function matrixRotationX(point, tethaDelta) {
+export function pointMatrixRotationX(point, tethaDelta) {
     const radians = degreesToRadians(tethaDelta);
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
     const realX = point[0] - originX;
@@ -31,7 +31,7 @@ export function matrixRotationX(point, tethaDelta) {
     return [x + originX, y + originY, z + originZ];
 }
 
-export function matrixRotationY(point, tethaDelta) {
+export function pointMatrixRotationY(point, tethaDelta) {
     const radians = degreesToRadians(tethaDelta);
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
     const realX = point[0] - originX;
@@ -46,7 +46,7 @@ export function matrixRotationY(point, tethaDelta) {
     return [x + originX, y + originY, z + originZ];
 }
 
-export function matrixRotationZ(point, degrees) {
+export function pointMatrixRotationZ(point, degrees) {
     const radians = degreesToRadians(degrees);
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
     const realX = point[0] - originX;
@@ -61,8 +61,15 @@ export function matrixRotationZ(point, degrees) {
     return [x + originX, y + originY, z + originZ];
 }
 
-export function matrixScaleZ(point, scaleRatio) {
-    point[0] *= scaleRatio;
-    point[1] *= scaleRatio;
-    point[2] *= scaleRatio;
+export function pointMatrixScaleZ(point, scaleRatio) {
+    const [originX, originY, originZ] = data.INITIAL_ORIGIN;
+    let realX = point[0] - originX;
+    let realY = point[1] - originY;
+    let realZ = point[2] - originZ;
+
+    realX *= scaleRatio;
+    realY *= scaleRatio;
+    realZ *= scaleRatio;
+
+    return [realX + originX, realY + originY, realZ + originZ];
 }
