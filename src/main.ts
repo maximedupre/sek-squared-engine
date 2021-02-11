@@ -7,12 +7,15 @@ import {
 import { data } from './data.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
 
+const INTERVAL_IN_S = 0.01;
+const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
+
 const tethas = {
     x: 0,
     y: 0,
     z: 0,
 };
-let nbTicksForSpace = 0;
+let nbIntervalsForSpace = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
     const axis = ['x', 'y', 'z'];
@@ -28,7 +31,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ') {
-            nbTicksForSpace = 4;
+            nbIntervalsForSpace =
+                NB_INTERVALS_FOR_SPACE_PER_SECOND / INTERVAL_IN_S;
         }
     });
 
@@ -43,15 +47,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function start(canvas) {
     const METERS_PER_PX = 10;
-    const INTERVAL_IN_S = 0.1;
     // m/s^2
     let positiveAcceleration = 0;
     // m/s
     let speed = 0;
 
     const intervalId = setInterval(() => {
-        if (nbTicksForSpace > 0) {
-            nbTicksForSpace--;
+        if (nbIntervalsForSpace > 0) {
+            nbIntervalsForSpace--;
 
             positiveAcceleration += getAcceleration(GRAVITY * 2, INTERVAL_IN_S);
         } else {
