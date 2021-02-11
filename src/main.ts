@@ -2,6 +2,7 @@ import {
     matrixRotationX,
     matrixRotationY,
     matrixRotationZ,
+    matrixScaleZ,
     origin2dTranslation,
 } from './3d.js';
 import { data } from './data.js';
@@ -15,6 +16,7 @@ const tethas = {
     y: 0,
     z: 0,
 };
+let scale = 1;
 let nbIntervalsForSpace = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -25,8 +27,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     origin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
     draw(canvas, data.INITIAL_FACES);
-    onSlider(-10, 'x', canvas);
-    onSlider(-10, 'y', canvas);
+    onSliderRotation(-10, 'x', canvas);
+    onSliderRotation(-10, 'y', canvas);
     start(canvas);
 
     document.addEventListener('keydown', (e) => {
@@ -38,11 +40,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
     for (let a of axis) {
         document
-            .querySelector(`#slider-${a}`)
+            .querySelector(`#slider-${a}-rotation`)
             .addEventListener('input', (e: KeyboardEvent) =>
-                onSlider((e.target as HTMLInputElement).value, a, canvas),
+                onSliderRotation(
+                    (e.target as HTMLInputElement).value,
+                    a,
+                    canvas,
+                ),
             );
     }
+
+    document
+        .querySelector(`#slider-z-scaling`)
+        .addEventListener('input', (e: KeyboardEvent) =>
+            onSliderScaling((e.target as HTMLInputElement).value, canvas),
+        );
 });
 
 function start(canvas) {
@@ -120,7 +132,7 @@ function draw(canvas, faces) {
     }
 }
 
-function onSlider(value, axis, canvas) {
+function onSliderRotation(value, axis, canvas) {
     const faces = [];
     const tethaDelta = tethas[axis] - value;
     tethas[axis] = value;
@@ -152,6 +164,27 @@ function onSlider(value, axis, canvas) {
     }
 
     draw(canvas, faces);
+}
+
+function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
+    const tmpOriginX = data.INITIAL_ORIGIN[0];
+    const tmpOriginY = data.INITIAL_ORIGIN[1];
+    const tmpOriginZ = data.INITIAL_ORIGIN[2];
+    const scaleRatio = +value / scale;
+    scale = +value;
+
+    for (let face of data.INITIAL_FACES) {
+        for (let point of face.points) {
+            matrixScaleZ(point, scaleRatio);
+        }
+    }
+
+    data.INITIAL_ORIGIN[0] *= scaleRatio;
+    data.INITIAL_ORIGIN[1] *= scaleRatio;
+    data.INITIAL_ORIGIN[2] *= scaleRatio;
+
+    origin2dTranslation([tmpOriginX, tmpOriginY, tmpOriginZ]);
+    draw(canvas, data.INITIAL_FACES);
 }
 
 function getLimitThresspassPx(canvas, type) {
