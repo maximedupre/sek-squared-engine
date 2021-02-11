@@ -1,29 +1,57 @@
-import { matrixRotationX, matrixRotationY, matrixRotationZ, origin2dTranslation, } from './3d.js';
+import { matrixRotationX, matrixRotationY, matrixRotationZ, matrixScaleZ, origin2dTranslation, } from './3d.js';
 import { data } from './data.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
+var INTERVAL_IN_S = 0.01;
+var NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
 var tethas = {
     x: 0,
     y: 0,
     z: 0
 };
+var scale = 1;
+var nbIntervalsForSpace = 0;
 window.addEventListener('DOMContentLoaded', function () {
+    var axis = ['x', 'y', 'z'];
     var canvas = document.querySelector('canvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     origin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
     draw(canvas, data.INITIAL_FACES);
-    onSlider(-10, 'x', canvas);
-    onSlider(-10, 'y', canvas);
+    onSliderRotation(-10, 'x', canvas);
+    onSliderRotation(-10, 'y', canvas);
+    start(canvas);
+    document.addEventListener('keydown', function (e) {
+        if (e.key === ' ') {
+            nbIntervalsForSpace =
+                NB_INTERVALS_FOR_SPACE_PER_SECOND / INTERVAL_IN_S;
+        }
+    });
+    var _loop_1 = function (a) {
+        document
+            .querySelector("#slider-" + a + "-rotation")
+            .addEventListener('input', function (e) {
+            return onSliderRotation(e.target.value, a, canvas);
+        });
+    };
+    for (var _i = 0, axis_1 = axis; _i < axis_1.length; _i++) {
+        var a = axis_1[_i];
+        _loop_1(a);
+    }
+    document
+        .querySelector("#slider-z-scaling")
+        .addEventListener('input', function (e) {
+        return onSliderScaling(e.target.value, canvas);
+    });
+});
+function start(canvas) {
     var METERS_PER_PX = 10;
-    var INTERVAL_IN_S = 0.1;
     // m/s^2
     var positiveAcceleration = 0;
     // m/s
     var speed = 0;
-    var nbTicksForSpace = 0;
     var intervalId = setInterval(function () {
-        if (nbTicksForSpace > 0) {
-            nbTicksForSpace--;
+        if (nbIntervalsForSpace > 0) {
+            nbIntervalsForSpace--;
             positiveAcceleration += getAcceleration(GRAVITY * 2, INTERVAL_IN_S);
         }
         else {
@@ -44,30 +72,12 @@ window.addEventListener('DOMContentLoaded', function () {
                 50,
             ]);
             clearInterval(intervalId);
+            document.querySelector('.gameover').style.display =
+                'block';
         }
         draw(canvas, data.INITIAL_FACES);
     }, INTERVAL_IN_S * 1000);
-    document.addEventListener('keydown', function (e) {
-        if (e.key === ' ') {
-            nbTicksForSpace = 4;
-        }
-    });
-    document
-        .querySelector('#slider-x')
-        .addEventListener('input', function (e) {
-        return onSlider(e.target.value, 'x', canvas);
-    });
-    document
-        .querySelector('#slider-y')
-        .addEventListener('input', function (e) {
-        return onSlider(e.target.value, 'y', canvas);
-    });
-    document
-        .querySelector('#slider-z')
-        .addEventListener('input', function (e) {
-        return onSlider(e.target.value, 'z', canvas);
-    });
-});
+}
 function draw(canvas, faces) {
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -89,7 +99,7 @@ function draw(canvas, faces) {
         ctx.fill();
     }
 }
-function onSlider(value, axis, canvas) {
+function onSliderRotation(value, axis, canvas) {
     var faces = [];
     var tethaDelta = tethas[axis] - value;
     tethas[axis] = value;
@@ -118,6 +128,25 @@ function onSlider(value, axis, canvas) {
         data.INITIAL_FACES = faces;
     }
     draw(canvas, faces);
+}
+function onSliderScaling(value, canvas) {
+    var tmpOriginX = data.INITIAL_ORIGIN[0];
+    var tmpOriginY = data.INITIAL_ORIGIN[1];
+    var tmpOriginZ = data.INITIAL_ORIGIN[2];
+    var scaleRatio = +value / scale;
+    scale = +value;
+    for (var _i = 0, _a = data.INITIAL_FACES; _i < _a.length; _i++) {
+        var face = _a[_i];
+        for (var _b = 0, _c = face.points; _b < _c.length; _b++) {
+            var point = _c[_b];
+            matrixScaleZ(point, scaleRatio);
+        }
+    }
+    data.INITIAL_ORIGIN[0] *= scaleRatio;
+    data.INITIAL_ORIGIN[1] *= scaleRatio;
+    data.INITIAL_ORIGIN[2] *= scaleRatio;
+    origin2dTranslation([tmpOriginX, tmpOriginY, tmpOriginZ]);
+    draw(canvas, data.INITIAL_FACES);
 }
 function getLimitThresspassPx(canvas, type) {
     var bottom = canvas.height;

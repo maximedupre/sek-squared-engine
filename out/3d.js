@@ -14,8 +14,8 @@ export function origin2dTranslation(newOrigin) {
     }
     data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
 }
-export function matrixRotationX(point, degrees) {
-    var radians = degreesToRadians(degrees);
+export function matrixRotationX(point, tethaDelta) {
+    var radians = degreesToRadians(tethaDelta);
     var _a = data.INITIAL_ORIGIN, originX = _a[0], originY = _a[1], originZ = _a[2];
     var realX = point[0] - originX;
     var realY = point[1] - originY;
@@ -25,8 +25,8 @@ export function matrixRotationX(point, degrees) {
     var z = realX * 0 + realY * Math.sin(radians) + realZ * Math.cos(radians);
     return [x + originX, y + originY, z + originZ];
 }
-export function matrixRotationY(point, degrees) {
-    var radians = degreesToRadians(degrees);
+export function matrixRotationY(point, tethaDelta) {
+    var radians = degreesToRadians(tethaDelta);
     var _a = data.INITIAL_ORIGIN, originX = _a[0], originY = _a[1], originZ = _a[2];
     var realX = point[0] - originX;
     var realY = point[1] - originY;
@@ -46,4 +46,9 @@ export function matrixRotationZ(point, degrees) {
     var y = realX * Math.sin(radians) + realY * Math.cos(radians) + realZ * 0;
     var z = realX * 0 + realY * 0 + realZ * 1;
     return [x + originX, y + originY, z + originZ];
+}
+export function matrixScaleZ(point, scaleRatio) {
+    point[0] *= scaleRatio;
+    point[1] *= scaleRatio;
+    point[2] *= scaleRatio;
 }
