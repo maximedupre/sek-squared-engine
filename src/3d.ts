@@ -1,4 +1,5 @@
-import playerCube, { Origin, Point } from './player-cube.js';
+import playerCube from './player-cube.js';
+import { Origin, Point } from './types.js';
 
 export function degreesToRadians(degrees: number) {
     return (degrees * Math.PI) / 180;

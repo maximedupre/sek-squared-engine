@@ -6,7 +6,8 @@ import {
     pointMatrixScaleZ as pointMatrixScale,
 } from './3d.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
-import playerCube, { Face, Point } from './player-cube.js';
+import playerCube from './player-cube.js';
+import { Face, Point } from './types.js';
 
 const INTERVAL_IN_S = 0.01;
 const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
