@@ -26,7 +26,11 @@ window.addEventListener('DOMContentLoaded', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    facesOrigin2dTranslation([canvas.width / 2, canvas.height / 2, 50]);
+    facesOrigin2dTranslation(playerCube, [
+        canvas.width / 2,
+        canvas.height / 2,
+        50,
+    ]);
     draw(canvas, playerCube.INITIAL_FACES);
     onSliderRotation(-10, 'x', canvas);
     onSliderRotation(-10, 'y', canvas);
@@ -81,13 +85,17 @@ function start(canvas: HTMLCanvasElement) {
             playerCube.INITIAL_ORIGIN[1] -
             getMovement(speedInPx, INTERVAL_IN_S);
 
-        facesOrigin2dTranslation([playerCube.INITIAL_ORIGIN[0], y, 50]);
+        facesOrigin2dTranslation(playerCube, [
+            playerCube.INITIAL_ORIGIN[0],
+            y,
+            50,
+        ]);
 
         const topThresspassPx = getLimitThresspassPx(canvas, 'top');
         const bottomThresspassPx = getLimitThresspassPx(canvas, 'bottom');
 
         if (topThresspassPx > 0 || bottomThresspassPx < 0) {
-            facesOrigin2dTranslation([
+            facesOrigin2dTranslation(playerCube, [
                 playerCube.INITIAL_ORIGIN[0],
                 playerCube.INITIAL_ORIGIN[1] +
                     (topThresspassPx || bottomThresspassPx),
@@ -158,11 +166,11 @@ function onSliderRotation(
             let newPoint;
 
             if (axis === 'x') {
-                newPoint = pointMatrixRotationX(point, tethaDelta);
+                newPoint = pointMatrixRotationX(playerCube, point, tethaDelta);
             } else if (axis === 'y') {
-                newPoint = pointMatrixRotationY(point, tethaDelta);
+                newPoint = pointMatrixRotationY(playerCube, point, tethaDelta);
             } else {
-                newPoint = pointMatrixRotationZ(point, tethaDelta);
+                newPoint = pointMatrixRotationZ(playerCube, point, tethaDelta);
             }
 
             points.push(newPoint);
@@ -186,7 +194,7 @@ function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
 
     for (let face of playerCube.INITIAL_FACES) {
         for (let point of face.points) {
-            const newPoint = pointMatrixScale(point, scaleRatio);
+            const newPoint = pointMatrixScale(playerCube, point, scaleRatio);
             point[0] = newPoint[0];
             point[1] = newPoint[1];
             point[2] = newPoint[2];
