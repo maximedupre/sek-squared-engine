@@ -5,13 +5,24 @@ export function degreesToRadians(degrees: number) {
 }
 
 export function cube(size: number, origin: Origin): Data {
+    const colors = ['yellow', 'blue', 'green', 'pink', 'orange', 'black'];
+
+    const generateRandomColor = () => {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const index = colors.indexOf(color);
+
+        colors.splice(index, 1);
+
+        return color;
+    };
+
     const faceInfo: any = [
-        { name: 'front', color: 'yellow' },
-        { name: 'top', color: 'blue' },
-        { name: 'back', color: 'green' },
-        { name: 'bottom', color: 'pink' },
-        { name: 'left', color: 'orange' },
-        { name: 'right', color: 'black' },
+        { name: 'front', color: generateRandomColor() },
+        { name: 'top', color: generateRandomColor() },
+        { name: 'back', color: generateRandomColor() },
+        { name: 'bottom', color: generateRandomColor() },
+        { name: 'left', color: generateRandomColor() },
+        { name: 'right', color: generateRandomColor() },
     ];
     const faces: any[] = [];
 
