@@ -5,9 +5,10 @@ import {
     pointMatrixRotationZ,
     pointMatrixScaleZ as pointMatrixScale,
 } from './3d.js';
+import obstacleCube from './obstacle-cube.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
 import playerCube from './player-cube.js';
-import { Face, Point } from './types.js';
+import { Point } from './types.js';
 
 const INTERVAL_IN_S = 0.01;
 const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
@@ -31,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
         canvas.height / 2,
         50,
     ]);
-    draw(canvas, playerCube.INITIAL_FACES);
+    draw(canvas);
     onSliderRotation(-10, 'x', canvas);
     onSliderRotation(-10, 'y', canvas);
     start(canvas);
@@ -107,46 +108,51 @@ function start(canvas: HTMLCanvasElement) {
                 'block';
         }
 
-        draw(canvas, playerCube.INITIAL_FACES);
+        draw(canvas);
         (document.querySelector(
             '.timer',
         ) as any).textContent = `${cumulSecs.toFixed(2)} SECONDS`;
     }, INTERVAL_IN_S * 1000);
 }
 
-function draw(canvas: HTMLCanvasElement, faces: Face[]) {
+function draw(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    faces.sort((a, b) => {
-        const sumZA = a.points.reduce(
-            (acc: number, value: Point) => acc + value[2],
-            0,
-        );
+    for (const faces of [
+        playerCube.INITIAL_FACES,
+        obstacleCube.INITIAL_FACES,
+    ]) {
+        faces.sort((a, b) => {
+            const sumZA = a.points.reduce(
+                (acc: number, value: Point) => acc + value[2],
+                0,
+            );
 
-        const sumZB = b.points.reduce(
-            (acc: number, value: Point) => acc + value[2],
-            0,
-        );
+            const sumZB = b.points.reduce(
+                (acc: number, value: Point) => acc + value[2],
+                0,
+            );
 
-        return sumZA < sumZB ? 1 : -1;
-    });
+            return sumZA < sumZB ? 1 : -1;
+        });
 
-    for (let i = 0; i < faces.length; i++) {
-        const points = faces[i].points;
+        for (let i = 0; i < faces.length; i++) {
+            const points = faces[i].points;
 
-        ctx.beginPath();
+            ctx.beginPath();
 
-        ctx.fillStyle = faces[i].color;
-        ctx.globalAlpha = 0.925;
+            ctx.fillStyle = faces[i].color;
+            ctx.globalAlpha = 0.925;
 
-        ctx.moveTo(points[0][0], points[0][1]);
+            ctx.moveTo(points[0][0], points[0][1]);
 
-        for (let point of points) {
-            ctx.lineTo(point[0], point[1]);
+            for (let point of points) {
+                ctx.lineTo(point[0], point[1]);
+            }
+
+            ctx.fill();
         }
-
-        ctx.fill();
     }
 }
 
@@ -181,11 +187,11 @@ function onSliderRotation(
             color: face.color,
             points,
         });
-
-        playerCube.INITIAL_FACES = faces;
     }
 
-    draw(canvas, faces);
+    playerCube.INITIAL_FACES = faces;
+
+    draw(canvas);
 }
 
 function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
@@ -201,7 +207,7 @@ function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
         }
     }
 
-    draw(canvas, playerCube.INITIAL_FACES);
+    draw(canvas);
 }
 
 function getLimitThresspassPx(canvas: HTMLCanvasElement, type: string) {
