@@ -4,6 +4,83 @@ export function degreesToRadians(degrees: number) {
     return (degrees * Math.PI) / 180;
 }
 
+export function cube(size: number, origin: Origin): Data {
+    const faceInfo: any = [
+        { name: 'front', color: 'yellow' },
+        { name: 'top', color: 'blue' },
+        { name: 'back', color: 'green' },
+        { name: 'bottom', color: 'pink' },
+        { name: 'left', color: 'orange' },
+        { name: 'right', color: 'black' },
+    ];
+    const faces: any[] = [];
+
+    for (const i of faceInfo) {
+        const face: any = {
+            name: i.name,
+            color: i.color,
+            points: [],
+        };
+        const xNear = origin[0] - size / 2;
+        const yNear = origin[1] - size / 2;
+        const zNear = origin[2] - size / 2;
+        const xFar = origin[0] + size / 2;
+        const yFar = origin[1] + size / 2;
+        const zFar = origin[2] + size / 2;
+
+        if (i.name === 'front') {
+            face.points = [
+                [xNear, yNear, zNear],
+                [xNear, yFar, zNear],
+                [xFar, yFar, zNear],
+                [xFar, yNear, zNear],
+            ];
+        } else if (i.name === 'top') {
+            face.points = [
+                [xNear, yNear, zNear],
+                [xNear, yNear, zFar],
+                [xFar, yNear, zFar],
+                [xFar, yNear, zNear],
+            ];
+        } else if (i.name === 'back') {
+            face.points = [
+                [xNear, yFar, zFar],
+                [xNear, yNear, zFar],
+                [xFar, yNear, zFar],
+                [xFar, yFar, zFar],
+            ];
+        } else if (i.name === 'bottom') {
+            face.points = [
+                [xNear, yFar, zFar],
+                [xNear, yFar, zNear],
+                [xFar, yFar, zNear],
+                [xFar, yFar, zFar],
+            ];
+        } else if (i.name === 'left') {
+            face.points = [
+                [xNear, yFar, zFar],
+                [xNear, yFar, zNear],
+                [xNear, yNear, zNear],
+                [xNear, yNear, zFar],
+            ];
+        } else if (i.name === 'right') {
+            face.points = [
+                [xFar, yFar, zFar],
+                [xFar, yFar, zNear],
+                [xFar, yNear, zNear],
+                [xFar, yNear, zFar],
+            ];
+        }
+
+        faces.push(face);
+    }
+
+    return {
+        INITIAL_ORIGIN: origin,
+        INITIAL_FACES: faces as any,
+    };
+}
+
 export function facesOrigin2dTranslation(data: Data, newOrigin: Origin) {
     for (let face of data.INITIAL_FACES) {
         for (let point of face.points) {

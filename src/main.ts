@@ -1,15 +1,15 @@
 import {
+    cube,
     facesOrigin2dTranslation,
     pointMatrixRotationX,
     pointMatrixRotationY,
     pointMatrixRotationZ,
     pointMatrixScaleZ as pointMatrixScale,
 } from './3d.js';
-import obstacleCube from './obstacle-cube.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
-import playerCube from './player-cube.js';
 import { Point } from './types.js';
 
+const playerCube = cube(100, [50, 50, 50]);
 const INTERVAL_IN_S = 0.01;
 const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
 
@@ -119,10 +119,7 @@ function draw(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (const faces of [
-        playerCube.INITIAL_FACES,
-        obstacleCube.INITIAL_FACES,
-    ]) {
+    for (const faces of [playerCube.INITIAL_FACES]) {
         faces.sort((a, b) => {
             const sumZA = a.points.reduce(
                 (acc: number, value: Point) => acc + value[2],
