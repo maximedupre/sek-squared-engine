@@ -4,22 +4,38 @@ import {
     pointMatrixRotationX,
     pointMatrixRotationY,
     pointMatrixRotationZ,
-    pointMatrixScaleZ as pointMatrixScale,
+    pointMatrixScaleZ,
 } from './3d.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
 import { Point } from './types.js';
 
-const playerCube = cube(100, [50, 50, 50]);
+const OBSTACLE_CUBE_WIDTH = 200;
 const INTERVAL_IN_S = 0.01;
 const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
+const OBSTACLE_TIME_TO_DESPAWN = 10;
+const playerCube = cube(100, [50, 50, 50]);
+const obstacleCube = cube(OBSTACLE_CUBE_WIDTH, [400, 400, 400]);
 
 const tethas = {
     x: 0,
     y: 0,
     z: 0,
 };
-let scale = 1;
+let scale = 0.01;
 let nbIntervalsForSpace = 0;
+const totalNbRepetitions = OBSTACLE_TIME_TO_DESPAWN / INTERVAL_IN_S - 1;
+const absDiffBetweenScalings =
+    (OBSTACLE_CUBE_WIDTH * ((1 - scale) / 1)) / totalNbRepetitions;
+
+for (let face of obstacleCube.INITIAL_FACES) {
+    for (let point of face.points) {
+        const newPoint = pointMatrixScaleZ(obstacleCube, point, scale);
+
+        point[0] = newPoint[0];
+        point[1] = newPoint[1];
+        point[2] = newPoint[2];
+    }
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     const axis: any[] = ['x', 'y', 'z'];
@@ -108,6 +124,24 @@ function start(canvas: HTMLCanvasElement) {
                 'block';
         }
 
+        const edgeLength =
+            obstacleCube.INITIAL_FACES[0].points[0][0] -
+            obstacleCube.INITIAL_FACES[0].points[2][0];
+        const scaleRatio = 1 + absDiffBetweenScalings / Math.abs(edgeLength);
+
+        for (let face of obstacleCube.INITIAL_FACES) {
+            for (let point of face.points) {
+                const newPoint = pointMatrixScaleZ(
+                    obstacleCube,
+                    point,
+                    scaleRatio,
+                );
+                point[0] = newPoint[0];
+                point[1] = newPoint[1];
+                point[2] = newPoint[2];
+            }
+        }
+
         draw(canvas);
         (document.querySelector(
             '.timer',
@@ -119,7 +153,10 @@ function draw(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (const faces of [playerCube.INITIAL_FACES]) {
+    for (const faces of [
+        playerCube.INITIAL_FACES,
+        obstacleCube.INITIAL_FACES,
+    ]) {
         faces.sort((a, b) => {
             const sumZA = a.points.reduce(
                 (acc: number, value: Point) => acc + value[2],
@@ -197,7 +234,7 @@ function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
 
     for (let face of playerCube.INITIAL_FACES) {
         for (let point of face.points) {
-            const newPoint = pointMatrixScale(playerCube, point, scaleRatio);
+            const newPoint = pointMatrixScaleZ(playerCube, point, scaleRatio);
             point[0] = newPoint[0];
             point[1] = newPoint[1];
             point[2] = newPoint[2];
