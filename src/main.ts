@@ -102,11 +102,11 @@ function start(canvas: HTMLCanvasElement) {
             playerCube.INITIAL_ORIGIN[1] -
             getMovement(speedInPx, INTERVAL_IN_S);
 
-        facesOrigin2dTranslation(playerCube, [
-            playerCube.INITIAL_ORIGIN[0],
-            y,
-            50,
-        ]);
+        // facesOrigin2dTranslation(playerCube, [
+        //     playerCube.INITIAL_ORIGIN[0],
+        //     y,
+        //     50,
+        // ]);
 
         const topThresspassPx = getLimitThresspassPx(canvas, 'top');
         const bottomThresspassPx = getLimitThresspassPx(canvas, 'bottom');
