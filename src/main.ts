@@ -13,7 +13,7 @@ const OBSTACLE_CUBE_WIDTH = 200;
 const INTERVAL_IN_S = 0.01;
 const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
 const OBSTACLE_TIME_TO_DESPAWN = 10;
-const playerCube = cube(100, [50, 50, 50]);
+const playerCube = cube(100, [50, 50, 0]);
 // const obstacleCube = cube(OBSTACLE_CUBE_WIDTH, [400, 400, 400]);
 
 const tethas = {
