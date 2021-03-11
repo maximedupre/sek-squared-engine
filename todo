@@ -1,3 +1,3 @@
-* add first object coming towards player
-* scale the object with time
-* initialize the object with final position
+* perspective
+* obstacle cube should disappear when it reaches its maximum size
+* when obstacle cube touches player cube, game over
