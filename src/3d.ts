@@ -1,4 +1,4 @@
-import { Data, Origin, Point } from './types.js';
+import { Data, Origin } from './types.js';
 
 export function degreesToRadians(degrees: number) {
     return (degrees * Math.PI) / 180;
@@ -182,21 +182,23 @@ export function pointMatrixRotationZ(data: Data, tethaDelta: number) {
     }
 }
 
-export function pointMatrixScaleZ(
-    data: Data,
-    point: Point,
-    scaleRatio: number,
-) {
+export function pointMatrixScaleZ(data: Data, scaleRatio: number) {
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
-    let realX = point[0] - originX;
-    let realY = point[1] - originY;
-    let realZ = point[2] - originZ;
 
-    realX *= scaleRatio;
-    realY *= scaleRatio;
-    realZ *= scaleRatio;
+    for (let face of data.INITIAL_FACES) {
+        for (let point of face.points) {
+            let realX = point[0] - originX;
+            let realY = point[1] - originY;
+            let realZ = point[2] - originZ;
 
-    return [realX + originX, realY + originY, realZ + originZ];
+            realX *= scaleRatio;
+            realY *= scaleRatio;
+            realZ *= scaleRatio;
+            point[0] = realX + originX;
+            point[1] = realY + originY;
+            point[2] = realZ + originZ;
+        }
+    }
 }
 
 export function virtualPerspectiveCube(data: Data) {

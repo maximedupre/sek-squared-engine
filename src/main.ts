@@ -28,15 +28,7 @@ const totalNbRepetitions = OBSTACLE_TIME_TO_DESPAWN / INTERVAL_IN_S - 1;
 const absDiffBetweenScalings =
     (OBSTACLE_CUBE_WIDTH * ((1 - scale) / 1)) / totalNbRepetitions;
 
-for (let face of obstacleCube.INITIAL_FACES) {
-    for (let point of face.points) {
-        const newPoint = pointMatrixScaleZ(obstacleCube, point, scale);
-
-        point[0] = newPoint[0];
-        point[1] = newPoint[1];
-        point[2] = newPoint[2];
-    }
-}
+pointMatrixScaleZ(obstacleCube, scale);
 
 window.addEventListener('DOMContentLoaded', () => {
     const axis: any[] = ['x', 'y', 'z'];
@@ -130,19 +122,7 @@ function start(canvas: HTMLCanvasElement) {
             obstacleCube.INITIAL_FACES[0].points[2][0];
         const scaleRatio = 1 + absDiffBetweenScalings / Math.abs(edgeLength);
 
-        for (let face of obstacleCube.INITIAL_FACES) {
-            for (let point of face.points) {
-                const newPoint = pointMatrixScaleZ(
-                    obstacleCube,
-                    point,
-                    scaleRatio,
-                );
-                point[0] = newPoint[0];
-                point[1] = newPoint[1];
-                point[2] = newPoint[2];
-            }
-        }
-
+        pointMatrixScaleZ(obstacleCube, scaleRatio);
         draw(canvas);
         (document.querySelector(
             '.timer',
@@ -214,15 +194,7 @@ function onSliderScaling(value: string, canvas: HTMLCanvasElement) {
     const scaleRatio = +value / scale;
     scale = +value;
 
-    for (let face of playerCube.INITIAL_FACES) {
-        for (let point of face.points) {
-            const newPoint = pointMatrixScaleZ(playerCube, point, scaleRatio);
-            point[0] = newPoint[0];
-            point[1] = newPoint[1];
-            point[2] = newPoint[2];
-        }
-    }
-
+    pointMatrixScaleZ(playerCube, scaleRatio);
     draw(canvas);
 }
 
