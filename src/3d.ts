@@ -130,42 +130,56 @@ export function pointMatrixRotationX(data: Data, tethaDelta: number) {
     }
 }
 
-export function pointMatrixRotationY(
-    data: Data,
-    point: Point,
-    tethaDelta: number,
-) {
-    const radians = degreesToRadians(tethaDelta);
+export function pointMatrixRotationY(data: Data, tethaDelta: number) {
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
-    const realX = point[0] - originX;
-    const realY = point[1] - originY;
-    const realZ = point[2] - originZ;
+    const radians = degreesToRadians(tethaDelta);
 
-    const x = realX * Math.cos(radians) + realY * 0 + realZ * Math.sin(radians);
-    const y = realX * 0 + realY * 1 + realZ * 0;
-    const z =
-        realX * -Math.sin(radians) + realY * 0 + realZ * Math.cos(radians);
+    for (let face of data.INITIAL_FACES) {
+        for (let point of face.points) {
+            const realX = point[0] - originX;
+            const realY = point[1] - originY;
+            const realZ = point[2] - originZ;
+            const x =
+                realX * Math.cos(radians) +
+                realY * 0 +
+                realZ * Math.sin(radians);
+            const y = realX * 0 + realY * 1 + realZ * 0;
+            const z =
+                realX * -Math.sin(radians) +
+                realY * 0 +
+                realZ * Math.cos(radians);
 
-    return [x + originX, y + originY, z + originZ];
+            point[0] = x + originX;
+            point[1] = y + originY;
+            point[2] = z + originZ;
+        }
+    }
 }
 
-export function pointMatrixRotationZ(
-    data: Data,
-    point: Point,
-    degrees: number,
-) {
-    const radians = degreesToRadians(degrees);
+export function pointMatrixRotationZ(data: Data, tethaDelta: number) {
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
-    const realX = point[0] - originX;
-    const realY = point[1] - originY;
-    const realZ = point[2] - originZ;
+    const radians = degreesToRadians(tethaDelta);
 
-    const x =
-        realX * Math.cos(radians) + realY * -Math.sin(radians) + realZ * 0;
-    const y = realX * Math.sin(radians) + realY * Math.cos(radians) + realZ * 0;
-    const z = realX * 0 + realY * 0 + realZ * 1;
+    for (let face of data.INITIAL_FACES) {
+        for (let point of face.points) {
+            const realX = point[0] - originX;
+            const realY = point[1] - originY;
+            const realZ = point[2] - originZ;
+            const x =
+                realX * Math.cos(radians) +
+                realY * -Math.sin(radians) +
+                realZ * 0;
+            const y =
+                realX * Math.sin(radians) +
+                realY * Math.cos(radians) +
+                realZ * 0;
+            const z = realX * 0 + realY * 0 + realZ * 1;
 
-    return [x + originX, y + originY, z + originZ];
+            point[0] = x + originX;
+            point[1] = y + originY;
+            point[2] = z + originZ;
+        }
+    }
 }
 
 export function pointMatrixScaleZ(

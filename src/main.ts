@@ -201,40 +201,10 @@ function onSliderRotation(
 
     if (axis === 'x') {
         pointMatrixRotationX(playerCube, tethaDelta);
+    } else if (axis === 'y') {
+        pointMatrixRotationY(playerCube, tethaDelta);
     } else {
-        const faces = [];
-
-        for (let face of playerCube.INITIAL_FACES) {
-            const points = [];
-
-            for (let point of face.points) {
-                let newPoint;
-
-                if (axis === 'y') {
-                    newPoint = pointMatrixRotationY(
-                        playerCube,
-                        point,
-                        tethaDelta,
-                    );
-                } else {
-                    newPoint = pointMatrixRotationZ(
-                        playerCube,
-                        point,
-                        tethaDelta,
-                    );
-                }
-
-                points.push(newPoint);
-            }
-
-            faces.push({
-                name: face.name,
-                color: face.color,
-                points,
-            });
-        }
-
-        playerCube.INITIAL_FACES = faces;
+        pointMatrixRotationZ(playerCube, tethaDelta);
     }
 
     draw(canvas);
