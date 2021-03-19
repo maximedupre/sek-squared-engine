@@ -1,4 +1,3 @@
 * perspective
-* fix 3d methods to work on whole cube instead of individual points
 * obstacle cube should disappear when it reaches its maximum size
 * when obstacle cube touches player cube, game over
