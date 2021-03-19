@@ -196,35 +196,46 @@ function onSliderRotation(
     axis: 'x' | 'y' | 'z',
     canvas: HTMLCanvasElement,
 ) {
-    const faces = [];
     const tethaDelta = tethas[axis] - value;
     tethas[axis] = value;
 
-    for (let face of playerCube.INITIAL_FACES) {
-        const points = [];
+    if (axis === 'x') {
+        pointMatrixRotationX(playerCube, tethaDelta);
+    } else {
+        const faces = [];
 
-        for (let point of face.points) {
-            let newPoint;
+        for (let face of playerCube.INITIAL_FACES) {
+            const points = [];
 
-            if (axis === 'x') {
-                newPoint = pointMatrixRotationX(playerCube, point, tethaDelta);
-            } else if (axis === 'y') {
-                newPoint = pointMatrixRotationY(playerCube, point, tethaDelta);
-            } else {
-                newPoint = pointMatrixRotationZ(playerCube, point, tethaDelta);
+            for (let point of face.points) {
+                let newPoint;
+
+                if (axis === 'y') {
+                    newPoint = pointMatrixRotationY(
+                        playerCube,
+                        point,
+                        tethaDelta,
+                    );
+                } else {
+                    newPoint = pointMatrixRotationZ(
+                        playerCube,
+                        point,
+                        tethaDelta,
+                    );
+                }
+
+                points.push(newPoint);
             }
 
-            points.push(newPoint);
+            faces.push({
+                name: face.name,
+                color: face.color,
+                points,
+            });
         }
 
-        faces.push({
-            name: face.name,
-            color: face.color,
-            points,
-        });
+        playerCube.INITIAL_FACES = faces;
     }
-
-    playerCube.INITIAL_FACES = faces;
 
     draw(canvas);
 }

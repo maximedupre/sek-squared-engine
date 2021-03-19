@@ -104,23 +104,30 @@ export function facesOrigin2dTranslation(data: Data, newOrigin: Origin) {
     data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], newOrigin[2]];
 }
 
-export function pointMatrixRotationX(
-    data: Data,
-    point: Point,
-    tethaDelta: number,
-) {
-    const radians = degreesToRadians(tethaDelta);
+export function pointMatrixRotationX(data: Data, tethaDelta: number) {
     const [originX, originY, originZ] = data.INITIAL_ORIGIN;
-    const realX = point[0] - originX;
-    const realY = point[1] - originY;
-    const realZ = point[2] - originZ;
+    const radians = degreesToRadians(tethaDelta);
 
-    const x = realX * 1 + realY * 0 + realZ * 0;
-    const y =
-        realX * 0 + realY * Math.cos(radians) + realZ * -Math.sin(radians);
-    const z = realX * 0 + realY * Math.sin(radians) + realZ * Math.cos(radians);
+    for (let face of data.INITIAL_FACES) {
+        for (let point of face.points) {
+            const realX = point[0] - originX;
+            const realY = point[1] - originY;
+            const realZ = point[2] - originZ;
+            const x = realX * 1 + realY * 0 + realZ * 0;
+            const y =
+                realX * 0 +
+                realY * Math.cos(radians) +
+                realZ * -Math.sin(radians);
+            const z =
+                realX * 0 +
+                realY * Math.sin(radians) +
+                realZ * Math.cos(radians);
 
-    return [x + originX, y + originY, z + originZ];
+            point[0] = x + originX;
+            point[1] = y + originY;
+            point[2] = z + originZ;
+        }
+    }
 }
 
 export function pointMatrixRotationY(
