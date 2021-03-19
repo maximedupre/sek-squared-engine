@@ -5,6 +5,7 @@ import {
     pointMatrixRotationY,
     pointMatrixRotationZ,
     pointMatrixScaleZ,
+    virtualPerspectiveCube,
 } from './3d.js';
 import { getAcceleration, getMovement, getSpeed, GRAVITY } from './physics.js';
 import { Point } from './types.js';
@@ -13,8 +14,8 @@ const OBSTACLE_CUBE_WIDTH = 200;
 const INTERVAL_IN_S = 0.01;
 const NB_INTERVALS_FOR_SPACE_PER_SECOND = 0.4;
 const OBSTACLE_TIME_TO_DESPAWN = 10;
-const playerCube = cube(100, [50, 50, 0]);
-// const obstacleCube = cube(OBSTACLE_CUBE_WIDTH, [400, 400, 400]);
+const playerCube = cube(100, [0, 0, 100]);
+const obstacleCube = cube(OBSTACLE_CUBE_WIDTH, [400, 400, 400]);
 
 const tethas = {
     x: 0,
@@ -27,15 +28,15 @@ const totalNbRepetitions = OBSTACLE_TIME_TO_DESPAWN / INTERVAL_IN_S - 1;
 const absDiffBetweenScalings =
     (OBSTACLE_CUBE_WIDTH * ((1 - scale) / 1)) / totalNbRepetitions;
 
-// for (let face of obstacleCube.INITIAL_FACES) {
-//     for (let point of face.points) {
-//         const newPoint = pointMatrixScaleZ(obstacleCube, point, scale);
+for (let face of obstacleCube.INITIAL_FACES) {
+    for (let point of face.points) {
+        const newPoint = pointMatrixScaleZ(obstacleCube, point, scale);
 
-//         point[0] = newPoint[0];
-//         point[1] = newPoint[1];
-//         point[2] = newPoint[2];
-//     }
-// }
+        point[0] = newPoint[0];
+        point[1] = newPoint[1];
+        point[2] = newPoint[2];
+    }
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     const axis: any[] = ['x', 'y', 'z'];
@@ -46,12 +47,12 @@ window.addEventListener('DOMContentLoaded', () => {
     facesOrigin2dTranslation(playerCube, [
         canvas.width / 2,
         canvas.height / 2,
-        50,
+        playerCube.INITIAL_ORIGIN[2],
     ]);
+    // onSliderRotation(-10, 'x', canvas);
+    // onSliderRotation(-10, 'y', canvas);
     draw(canvas);
-    onSliderRotation(-10, 'x', canvas);
-    onSliderRotation(-10, 'y', canvas);
-    start(canvas);
+    // start(canvas);
 
     document.addEventListener('keydown', (e) => {
         if (e.key === ' ') {
@@ -102,11 +103,11 @@ function start(canvas: HTMLCanvasElement) {
             playerCube.INITIAL_ORIGIN[1] -
             getMovement(speedInPx, INTERVAL_IN_S);
 
-        // facesOrigin2dTranslation(playerCube, [
-        //     playerCube.INITIAL_ORIGIN[0],
-        //     y,
-        //     50,
-        // ]);
+        facesOrigin2dTranslation(playerCube, [
+            playerCube.INITIAL_ORIGIN[0],
+            y,
+            50,
+        ]);
 
         const topThresspassPx = getLimitThresspassPx(canvas, 'top');
         const bottomThresspassPx = getLimitThresspassPx(canvas, 'bottom');
@@ -124,23 +125,23 @@ function start(canvas: HTMLCanvasElement) {
                 'block';
         }
 
-        // const edgeLength =
-        //     obstacleCube.INITIAL_FACES[0].points[0][0] -
-        //     obstacleCube.INITIAL_FACES[0].points[2][0];
-        // const scaleRatio = 1 + absDiffBetweenScalings / Math.abs(edgeLength);
+        const edgeLength =
+            obstacleCube.INITIAL_FACES[0].points[0][0] -
+            obstacleCube.INITIAL_FACES[0].points[2][0];
+        const scaleRatio = 1 + absDiffBetweenScalings / Math.abs(edgeLength);
 
-        // for (let face of obstacleCube.INITIAL_FACES) {
-        //     for (let point of face.points) {
-        //         const newPoint = pointMatrixScaleZ(
-        //             obstacleCube,
-        //             point,
-        //             scaleRatio,
-        //         );
-        //         point[0] = newPoint[0];
-        //         point[1] = newPoint[1];
-        //         point[2] = newPoint[2];
-        //     }
-        // }
+        for (let face of obstacleCube.INITIAL_FACES) {
+            for (let point of face.points) {
+                const newPoint = pointMatrixScaleZ(
+                    obstacleCube,
+                    point,
+                    scaleRatio,
+                );
+                point[0] = newPoint[0];
+                point[1] = newPoint[1];
+                point[2] = newPoint[2];
+            }
+        }
 
         draw(canvas);
         (document.querySelector(
@@ -154,7 +155,7 @@ function draw(canvas: HTMLCanvasElement) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (const faces of [
-        playerCube.INITIAL_FACES,
+        virtualPerspectiveCube(playerCube).INITIAL_FACES,
         // obstacleCube.INITIAL_FACES,
     ]) {
         faces.sort((a, b) => {

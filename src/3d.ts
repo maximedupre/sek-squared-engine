@@ -95,13 +95,13 @@ export function cube(size: number, origin: Origin): Data {
 export function facesOrigin2dTranslation(data: Data, newOrigin: Origin) {
     for (let face of data.INITIAL_FACES) {
         for (let point of face.points) {
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 3; i++) {
                 point[i] += newOrigin[i] - data.INITIAL_ORIGIN[i];
             }
         }
     }
 
-    data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], data.INITIAL_ORIGIN[2]];
+    data.INITIAL_ORIGIN = [newOrigin[0], newOrigin[1], newOrigin[2]];
 }
 
 export function pointMatrixRotationX(
@@ -176,4 +176,24 @@ export function pointMatrixScaleZ(
     realZ *= scaleRatio;
 
     return [realX + originX, realY + originY, realZ + originZ];
+}
+
+export function virtualPerspectiveCube(data: Data) {
+    const clonedData: Data = JSON.parse(JSON.stringify(data));
+    const [originX, originY, originZ] = clonedData.INITIAL_ORIGIN;
+    const FIELD_OF_VIEW_DEGREES = 90;
+    const d = 1 / Math.tan(degreesToRadians(FIELD_OF_VIEW_DEGREES / 2));
+
+    console.log('cloneData.INITIAL_ORIGIN', clonedData.INITIAL_ORIGIN);
+    console.log('d', d);
+
+    for (let face of clonedData.INITIAL_FACES) {
+        for (let point of face.points) {
+            point[0] = ((point[0] - originX) / point[2]) * d * 100 + originX;
+            point[1] = ((point[1] - originY) / point[2]) * d * 100 + originY;
+            point[2] = point[2];
+        }
+    }
+
+    return clonedData;
 }
